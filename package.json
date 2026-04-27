@@ -11,12 +11,17 @@
   "dependencies": {
     "@ant-design/cssinjs": "^2.1.2",
     "@ant-design/nextjs-registry": "^1.3.0",
+    "@tabler/icons-react": "^3.41.1",
+    "@types/luxon": "^3.7.1",
     "@types/validator": "^13.15.10",
     "antd": "^6.3.6",
+    "clsx": "^2.1.1",
     "formik": "^2.4.9",
+    "luxon": "^3.7.2",
     "next": "16.2.4",
     "react": "19.2.4",
     "react-dom": "19.2.4",
+    "tailwind-merge": "^3.5.0",
     "validator": "^13.15.35",
     "yup": "^1.7.1"
   },
