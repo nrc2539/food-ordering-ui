@@ -18,9 +18,9 @@ function SidebarMenuItem({
     <Link
       href={path}
       className={cn(
-        "font-medium text-gray-700",
+        "font-medium text-gray-700 px-4",
         {
-          "text-orange-700": isActive,
+          "text-orange-700 bg-amber-100 rounded-lg": isActive,
           "flex items-center space-x-2": !!icon,
         },
         className,

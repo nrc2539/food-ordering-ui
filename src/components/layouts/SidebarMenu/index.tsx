@@ -1,15 +1,19 @@
-import { SidebarMenuProps } from "./interface";
-import { cn } from "@/libs/utils";
-import SidebarMenuItem from "./components/SidebarMenuItem";
 import {
   IconBookFilled,
   IconCategoryFilled,
+  IconLadle,
   IconLogout,
   IconReceiptFilled,
+  IconSoupFilled,
   IconToolsKitchen2Filled,
   IconUserFilled,
 } from "@tabler/icons-react";
 import { Button } from "antd";
+
+import { cn } from "@/libs/utils";
+
+import { SidebarMenuProps } from "./interface";
+import SidebarMenuItem from "./components/SidebarMenuItem";
 
 function SidebarMenu({ className }: SidebarMenuProps) {
   const menus = [
@@ -47,8 +51,12 @@ function SidebarMenu({ className }: SidebarMenuProps) {
         className,
       )}
     >
-      <div className="text-3xl font-medium text-orange-800 mb-5">
-        Food Ordeing Management
+      <div className="text-xl font-semibold text-orange-800 mb-5 flex items-center space-x-3">
+        <div className="flex flex-col items-start">
+          <IconLadle className="size-6" />
+          <IconSoupFilled className="size-6" />
+        </div>
+        <p>Food Ordeing Management</p>
       </div>
       {menus.map((menu, index) => (
         <SidebarMenuItem
