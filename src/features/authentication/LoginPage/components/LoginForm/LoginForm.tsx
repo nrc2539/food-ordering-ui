@@ -37,7 +37,6 @@ function LoginForm({ initialValues, handleSubmit }: LoginFormProps) {
         }) => (
           <Form onFinish={handleSubmit} layout="vertical">
             <Form.Item
-              hasFeedback
               className="w-full"
               name="email"
               validateStatus={touched.email && errors.email ? "error" : ""}
