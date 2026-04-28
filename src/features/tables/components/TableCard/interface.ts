@@ -2,7 +2,7 @@ import { TableFormType } from "@/models/table/TableFormType";
 import { TableType } from "@/models/table/TableType";
 
 export interface WithTableCardProps {
-  table: TableType;
+  data: TableType;
   className?: string;
 }
 export interface TableCardProps extends WithTableCardProps {

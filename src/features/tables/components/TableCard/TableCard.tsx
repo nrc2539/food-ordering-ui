@@ -12,16 +12,16 @@ import TableFormModal from "../TableFormModal";
 import ConfirmModal from "@/components/ConfirmModal";
 
 function TableCard({
-  table,
+  data,
   modalState,
   handleModalStateChange,
 }: TableCardProps) {
   return (
     <Card
-      title={table.name}
+      title={data.name}
       extra={
-        <Tag color={table.isAvailable ? "blue" : "red"}>
-          <span>{table.isAvailable ? "Available" : "Occupied"}</span>
+        <Tag color={data.isAvailable ? "blue" : "red"}>
+          <span>{data.isAvailable ? "Available" : "Occupied"}</span>
         </Tag>
       }
       styles={{ body: { padding: 0 } }}
@@ -30,7 +30,7 @@ function TableCard({
         <Button
           htmlType="button"
           type="primary"
-          disabled={!table.isAvailable}
+          disabled={!data.isAvailable}
           className=" not-disabled:bg-orange-700 font-medium"
           onClick={() => {
             // TODO: handle generate QR (Call API create table session)
@@ -46,7 +46,7 @@ function TableCard({
           onClick={() => {
             handleModalStateChange({
               type: "edit",
-              value: { id: table.id, name: table.name },
+              value: { id: data.id, name: data.name },
             });
           }}
         >
@@ -57,7 +57,7 @@ function TableCard({
           onClick={() => {
             handleModalStateChange({
               type: "delete",
-              value: { id: table.id, name: table.name },
+              value: { id: data.id, name: data.name },
             });
           }}
         >
@@ -91,7 +91,7 @@ function TableCard({
       >
         <p>
           Do you want to delete table{" "}
-          <span className="text-blue-500">{table.name}</span>
+          <span className="text-blue-500">{data.name}</span>
         </p>
       </ConfirmModal>
     </Card>

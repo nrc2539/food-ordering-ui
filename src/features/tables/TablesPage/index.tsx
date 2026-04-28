@@ -15,7 +15,7 @@ function TablesPage() {
       </div>
       <div className="grid gap-3 tablet:gap-4 grid-cols-1 tablet:grid-cols-4">
         {mockTables.map((table) => (
-          <TableCard key={table.id} table={table} />
+          <TableCard key={table.id} data={table} />
         ))}
       </div>
     </section>
