@@ -18,6 +18,7 @@ export default function TableFormModal({
 
   return (
     <Modal
+      title={isEdit ? "Edit Table" : "Create New Table"}
       className={className}
       open={open}
       onCancel={onCancel}

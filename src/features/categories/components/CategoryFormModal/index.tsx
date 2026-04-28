@@ -18,6 +18,7 @@ export default function CategoryFormModal({
 
   return (
     <Modal
+      title={isEdit ? "Edit Category" : "Create New Category"}
       className={className}
       open={open}
       onCancel={onCancel}
