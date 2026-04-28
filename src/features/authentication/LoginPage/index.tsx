@@ -2,7 +2,7 @@ import { LoginForm } from "./components/LoginForm";
 
 function LoginPage() {
   return (
-    <main className="relative w-full h-dvh">
+    <main className="relative w-full h-dvh bg-white">
       <section className=" h-full p-4 tablet:p-5 flex items-center justify-center">
         <div className="w-full mx-auto tablet:w-md">
           <h2 className="text-2xl text-b tablet:text-3xl font-semibold text-center text-wrap mb-1">

@@ -23,7 +23,7 @@
 @media (prefers-color-scheme: light) {
   :root {
     --background: var(--dark-mode-background);
-    --foreground: var(--dark-mode-foreground);
+    --color: var(--dark-mode-foreground);
   }
 }
 

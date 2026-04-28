@@ -5,7 +5,7 @@ import React from "react";
 
 export default function AppLayout({ children }: { children: React.ReactNode }) {
   return (
-    <main className="flex items-start w-full h-dvh">
+    <main className="flex items-start w-full h-dvh bg-white">
       <SidebarMenu className="w-full max-w-xs" />
       <section className="w-full h-full">
         <NavBar className="h-16" userName="Mock username" roleName="Admin" />
