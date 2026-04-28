@@ -60,7 +60,7 @@ function SidebarMenu({ className }: SidebarMenuProps) {
       </div>
       {menus.map((menu, index) => (
         <SidebarMenuItem
-          className="py-3 text-xl"
+          className="py-3 text-lg"
           title={menu.title}
           path={menu.path}
           icon={menu.icon}
@@ -71,7 +71,7 @@ function SidebarMenu({ className }: SidebarMenuProps) {
         <Button
           htmlType="button"
           size="large"
-          className="text-xl text-gray-700 font-medium hover:border-red-500 hover:text-red-500"
+          className="text-base text-gray-700 font-medium hover:border-red-500 hover:text-red-500"
           title="Logout"
         >
           <IconLogout className="size-5" />
