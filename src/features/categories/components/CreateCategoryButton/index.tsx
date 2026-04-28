@@ -4,7 +4,7 @@ import { Button } from "antd";
 import { IconCirclePlusFilled } from "@tabler/icons-react";
 
 import { cn } from "@/libs/utils";
-import TableFormModal from "../CategoryFormModal";
+import CategoryFormModal from "../CategoryFormModal";
 import { CreateCategoryButtonProps } from "./interface";
 
 function CreateCategoryButton({ className }: CreateCategoryButtonProps) {
@@ -21,11 +21,11 @@ function CreateCategoryButton({ className }: CreateCategoryButtonProps) {
         <IconCirclePlusFilled className="size-5" />
         <span>Create New Category</span>
       </Button>
-      <TableFormModal
+      <CategoryFormModal
         open={openModal}
         initialValue={{ name: "" }}
         onOk={() => {
-          // TODO: call API create Table
+          // TODO: call API create Category
           setOpenModal(false);
         }}
         onCancel={() => {
