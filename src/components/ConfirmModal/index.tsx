@@ -3,7 +3,7 @@ import { ConfirmModalProps } from "./interface";
 
 function ConfirmModal({
   open,
-  title,
+  title = "Confirm action",
   children,
   okText = "Delete",
   okButtonProps,
@@ -12,6 +12,7 @@ function ConfirmModal({
 }: ConfirmModalProps) {
   return (
     <Modal
+      destroyOnHidden
       open={open}
       title={title}
       onOk={onConfirm}

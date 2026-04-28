@@ -20,6 +20,11 @@ export default function CustomAntdConfigProvider({
           token: {
             fontFamily: mirt.style.fontFamily,
           },
+          components: {
+            Table: {
+              headerBg: "#ededed",
+            },
+          },
         }}
       >
         {children}
