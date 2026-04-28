@@ -1,6 +1,6 @@
 import { CategoryType } from "@/models/category/CategoryType";
-import CreateCategoryButton from "./components/CreateCategoryButton";
-import { CategoryCard } from "./components/CategoryCard";
+import CreateCategoryButton from "../components/CreateCategoryButton";
+import { CategoryCard } from "../components/CategoryCard";
 
 function CategoriesPage() {
   const mockCategories: CategoryType[] = Array.from({ length: 5 }).map(
