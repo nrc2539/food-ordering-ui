@@ -1,0 +1,8 @@
+import { RoleType } from "./RoleType";
+
+export interface UserType {
+  id: number;
+  name: string;
+  email: string;
+  role: RoleType;
+}
