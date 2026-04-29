@@ -15,7 +15,12 @@ function MenuGrid({ menus, loading = false, onAddToCart }: MenuGridProps) {
   }
 
   if (!menus || menus.length === 0) {
-    return <Empty description="No menu items available" />;
+    return (
+      <Empty
+        className="absolute -translate-y-1/2 top-1/2 -translate-x-1/2 left-1/2"
+        description="No menu items available"
+      />
+    );
   }
 
   return (

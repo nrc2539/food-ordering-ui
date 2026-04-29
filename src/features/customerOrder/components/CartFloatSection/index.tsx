@@ -39,21 +39,6 @@ export const CartFloatSection: React.FC<CartFloatSectionProps> = ({
           }}
           badge={{ count: totalItems }}
         />
-
-        // <div className="fixed bottom-6 right-6 z-40">
-        //   <Button
-        //     type="primary"
-        //     size="large"
-        //     icon={<ShoppingOutlined />}
-        //     onClick={onOpenCart}
-        //     className="w-16 h-16 rounded-full shadow-lg flex items-center justify-center"
-        //     style={{
-        //       fontSize: "20px",
-        //     }}
-        //   >
-        //     <span className="ml-1">{totalItems}</span>
-        //   </Button>
-        // </div>
       )}
 
       {/* Cart Drawer */}
@@ -77,7 +62,7 @@ export const CartFloatSection: React.FC<CartFloatSectionProps> = ({
         styles={{ body: { padding: "0px 16px 16px" } }}
       >
         {cartItems.length === 0 ? (
-          <Empty description="Your cart is empty" />
+          <Empty className="mt-4" description="Your cart is empty" />
         ) : (
           <div className="h-full flex flex-col">
             {/* Cart Items - Scrollable */}
