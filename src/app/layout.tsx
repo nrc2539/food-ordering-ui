@@ -2,7 +2,9 @@ import type { Metadata } from "next";
 import { Mitr } from "next/font/google";
 import "./globals.css";
 import { AntdRegistry } from "@ant-design/nextjs-registry";
-import CustomAntdConfigProvider from "@/components/CustomAntdConfigProvider";
+
+import CustomAntdConfigProvider from "@/providers/CustomAntdConfigProvider";
+import { ReactQueryProvider } from "@/providers/ReactQueryProvider";
 
 const mitr = Mitr({
   weight: ["200", "300", "400", "500", "600", "700"],
@@ -23,9 +25,11 @@ export default function RootLayout({
   return (
     <html lang="en" className={`${mitr.variable} h-full antialiased`}>
       <body className="min-h-full">
-        <AntdRegistry>
-          <CustomAntdConfigProvider>{children}</CustomAntdConfigProvider>
-        </AntdRegistry>
+        <ReactQueryProvider>
+          <AntdRegistry>
+            <CustomAntdConfigProvider>{children}</CustomAntdConfigProvider>
+          </AntdRegistry>
+        </ReactQueryProvider>
       </body>
     </html>
   );
