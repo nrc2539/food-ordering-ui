@@ -1,9 +1,15 @@
-import React from "react";
+import { Badge } from "antd";
+
+import { cn } from "@/libs/utils";
 import { OrderColumnProps } from "./inteface";
 import { OrderCard } from "../OrderCard";
-import { cn } from "@/libs/utils";
 
-function OrderColumn({ className, title, orders }: OrderColumnProps) {
+function OrderColumn({
+  className,
+  title,
+  orders,
+  totalOrder = 0,
+}: OrderColumnProps) {
   return (
     <div
       className={cn(
@@ -11,7 +17,11 @@ function OrderColumn({ className, title, orders }: OrderColumnProps) {
         className,
       )}
     >
-      <h2 className="text-xl font-medium">{title}</h2>
+      <div className="flex items-center space-x-2">
+        <h2 className="text-xl font-medium">{title}</h2>
+        <Badge className="bg-blue" count={totalOrder} showZero />
+      </div>
+
       {orders.map((v) => (
         <OrderCard key={v.id} order={v} />
       ))}

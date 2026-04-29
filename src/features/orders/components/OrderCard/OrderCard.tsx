@@ -14,7 +14,6 @@ function OrderCard({
       <div className="mb-3 text-sm flex flex-col space-y-1">
         <p>Order ID : {order.id}</p>
         <p>Table: {order.tableSession.table.name}</p>
-        <p>Menus</p>
         {order.orderItems.map((orderItem) => (
           <p key={orderItem.id}>
             {orderItem.quantity}x {orderItem.menu.name}
