@@ -8,7 +8,7 @@ export function cn(...args: ClassValue[]) {
 
 export function formatDate(
   date: string | Date | undefined,
-  format = "MMM d, yyyy HH:mm",
+  format = "dd MMM, yyyy",
 ) {
   if (!date) return "-";
   const newDate = DateTime.fromISO(new Date(date).toISOString());
