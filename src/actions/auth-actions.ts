@@ -2,13 +2,12 @@
 
 import axios from "axios";
 import { cookies } from "next/headers";
+import { redirect } from "next/navigation";
 
 import api from "@/libs/axios";
 import { API_URL } from "@/libs/constant";
 import { AuthenticationResponseType } from "@/models/authentication/AuthenticationResponseType";
 import { LoginFormType } from "@/models/authentication/LoginFormType";
-import { UserType } from "@/models/user/UserType";
-import { redirect } from "next/navigation";
 
 export async function login({
   email,
@@ -24,6 +23,7 @@ export async function login({
   cookieStore.set("accessToken", accessToken, {
     httpOnly: true,
     secure: process.env.NODE_ENV === "production",
+    maxAge: 4 * 60 * 60, // 4 hours
     path: "/",
   });
   cookieStore.set("refreshToken", refreshToken, {
@@ -48,11 +48,6 @@ export async function refreshToken(): Promise<AuthenticationResponseType> {
     accessToken: responseRefresh.data.accessToken,
     refreshToken: responseRefresh.data.refreshToken,
   };
-}
-
-export async function getMyProfile(): Promise<UserType> {
-  const res = await api.get("/auth/profile");
-  return res.data;
 }
 
 export async function logout() {

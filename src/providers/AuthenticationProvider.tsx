@@ -4,7 +4,7 @@ import { useQuery, useQueryClient } from "@tanstack/react-query";
 import { createContext } from "react";
 
 import { UserType } from "@/models/user/UserType";
-import { getMyProfile } from "@/actions/auth-actions";
+import { getProfile } from "@/actions/user-actions";
 
 interface AuthenticationContextType {
   user?: UserType;
@@ -27,7 +27,7 @@ export function AuthenticationProvider({ children }: React.PropsWithChildren) {
     refetch,
   } = useQuery({
     queryKey: ["my-profile"],
-    queryFn: getMyProfile,
+    queryFn: getProfile,
   });
 
   async function clearUserData() {
