@@ -2,24 +2,7 @@
 
 import api from "@/libs/axios";
 import { TableSessionStatusEnum } from "@/enums/TableSessionStatusEnum";
-import { PaginationType } from "@/interfaces/PaginationType";
-import { TableResponseType } from "@/models/table/TableResponseType";
 import { TableSessionType } from "@/models/table/TableSessionType";
-import { TableType } from "@/models/table/TableType";
-
-async function getTableSessions(
-  params?: PaginationType,
-): Promise<TableResponseType> {
-  const response = await api.get<TableType[]>("/table-sessions", { params });
-  return {
-    data: response.data,
-  };
-}
-
-async function getTableSession(id: number): Promise<TableSessionType> {
-  const response = await api.get(`/table-sessions/${id}`);
-  return response.data;
-}
 
 async function createTableSession(bodyReq: {
   tableId: number;
@@ -48,10 +31,4 @@ async function getTableSessionByToken(
   return response.data;
 }
 
-export {
-  getTableSessions,
-  getTableSession,
-  getTableSessionByToken,
-  createTableSession,
-  updateTableSession,
-};
+export { getTableSessionByToken, createTableSession, updateTableSession };

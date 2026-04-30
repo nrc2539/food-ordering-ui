@@ -2,25 +2,8 @@
 
 import api from "@/libs/axios";
 import { OrderType } from "@/models/order/OrderType";
-import { OrderResponseType } from "@/models/order/OrderResponseType";
-import { PaginationType } from "@/interfaces/PaginationType";
 import { CartItemType } from "@/models/cart/CartItemType";
 import { OrderStatusEnum } from "@/enums/OrderStatusEnum";
-
-async function getOrders(
-  params?: PaginationType & {
-    startAt: string; // ISO Date string
-    endAt?: string; // ISO Date string
-  },
-): Promise<OrderResponseType> {
-  const response = await api.get<OrderType[]>("/orders", { params });
-  return { data: response.data };
-}
-
-async function getOrder(id: number): Promise<OrderType> {
-  const response = await api.get<OrderType>(`/orders/${id}`);
-  return response.data;
-}
 
 async function createOrder(params: {
   tableSessionToken: string;
@@ -56,20 +39,4 @@ async function deleteOrder(id: number): Promise<void> {
   await api.delete(`/orders/${id}`);
 }
 
-async function getOrderByTableSession(
-  tableSessionToken: string,
-): Promise<OrderResponseType> {
-  const res = await api.get<OrderType[]>(
-    `/orders/table-sessions/${tableSessionToken}`,
-  );
-  return { data: res.data };
-}
-
-export {
-  getOrders,
-  getOrder,
-  createOrder,
-  updateOrder,
-  deleteOrder,
-  getOrderByTableSession,
-};
+export { createOrder, updateOrder, deleteOrder };

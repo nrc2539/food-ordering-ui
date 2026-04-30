@@ -3,22 +3,6 @@
 import api from "@/libs/axios";
 import { CategoryType } from "@/models/category/CategoryType";
 import { CategoryFormType } from "@/models/category/CategoryFormType";
-import { CategoryResponseType } from "@/models/category/CategoryResponseType";
-import { PaginationType } from "@/interfaces/PaginationType";
-
-async function getCategories(
-  params?: PaginationType,
-): Promise<CategoryResponseType> {
-  const response = await api.get<CategoryType[]>("/menus/categories", {
-    params,
-  });
-  return { data: response.data };
-}
-
-async function getCategory(id: number): Promise<CategoryType> {
-  const response = await api.get<CategoryType>(`/menus/categories/${id}`);
-  return response.data;
-}
 
 async function createCategory(form: CategoryFormType): Promise<CategoryType> {
   const createData = {
@@ -50,10 +34,4 @@ async function deleteCategory(id: number): Promise<void> {
   await api.delete(`/menus/categories/${id}`);
 }
 
-export {
-  getCategories,
-  getCategory,
-  createCategory,
-  updateCategory,
-  deleteCategory,
-};
+export { createCategory, updateCategory, deleteCategory };
