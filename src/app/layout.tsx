@@ -5,6 +5,7 @@ import { AntdRegistry } from "@ant-design/nextjs-registry";
 
 import CustomAntdConfigProvider from "@/providers/CustomAntdConfigProvider";
 import { ReactQueryProvider } from "@/providers/ReactQueryProvider";
+import { AuthenticationProvider } from "@/providers/AuthenticationProvider";
 
 const mitr = Mitr({
   weight: ["200", "300", "400", "500", "600", "700"],
@@ -26,9 +27,11 @@ export default function RootLayout({
     <html lang="en" className={`${mitr.variable} h-full antialiased`}>
       <body className="min-h-full">
         <ReactQueryProvider>
-          <AntdRegistry>
-            <CustomAntdConfigProvider>{children}</CustomAntdConfigProvider>
-          </AntdRegistry>
+          <AuthenticationProvider>
+            <AntdRegistry>
+              <CustomAntdConfigProvider>{children}</CustomAntdConfigProvider>
+            </AntdRegistry>
+          </AuthenticationProvider>
         </ReactQueryProvider>
       </body>
     </html>

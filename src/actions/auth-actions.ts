@@ -2,7 +2,6 @@
 
 import axios from "axios";
 import { cookies } from "next/headers";
-import { redirect } from "next/navigation";
 
 import api from "@/libs/axios";
 import { API_URL } from "@/libs/constant";
@@ -59,7 +58,5 @@ export async function logout() {
     const cookieStore = await cookies();
     cookieStore.delete("accessToken");
     cookieStore.delete("refreshToken");
-
-    redirect("/management/login");
   }
 }

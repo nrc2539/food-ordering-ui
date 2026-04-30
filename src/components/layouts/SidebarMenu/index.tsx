@@ -8,12 +8,12 @@ import {
   IconToolsKitchen2Filled,
   IconUserFilled,
 } from "@tabler/icons-react";
-import { Button } from "antd";
 
 import { cn } from "@/libs/utils";
 
 import { SidebarMenuProps } from "./interface";
 import SidebarMenuItem from "./components/SidebarMenuItem";
+import LogoutButton from "./components/LogoutButton";
 
 function SidebarMenu({ className }: SidebarMenuProps) {
   const menus = [
@@ -68,15 +68,10 @@ function SidebarMenu({ className }: SidebarMenuProps) {
         />
       ))}
       <div className="h-full flex flex-col justify-end">
-        <Button
-          htmlType="button"
-          size="large"
-          className="text-base text-gray-700 font-medium hover:border-red-500 hover:text-red-500"
-          title="Logout"
-        >
+        <LogoutButton>
           <IconLogout className="size-5" />
           <span>Logout</span>
-        </Button>
+        </LogoutButton>
       </div>
     </div>
   );

@@ -3,8 +3,8 @@ import { FormikHelpers } from "formik";
 
 export interface LoginFormProps {
   initialValues: LoginFormType;
-  handleSubmit: (
+  onSubmit: (
     values: LoginFormType,
     formikHelpers: FormikHelpers<LoginFormType>,
-  ) => void;
+  ) => Promise<void>;
 }

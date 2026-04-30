@@ -5,7 +5,7 @@ import * as Yup from "yup";
 
 import { LoginFormProps } from "./interface";
 
-function LoginForm({ initialValues, handleSubmit }: LoginFormProps) {
+function LoginForm({ initialValues, onSubmit }: LoginFormProps) {
   const validationSchema = Yup.object().shape({
     email: Yup.string()
       .test("email", "Email is invalid format.", (value) => {
@@ -24,7 +24,7 @@ function LoginForm({ initialValues, handleSubmit }: LoginFormProps) {
       <Formik
         initialValues={initialValues}
         validationSchema={validationSchema}
-        onSubmit={handleSubmit}
+        onSubmit={onSubmit}
       >
         {({
           values,
@@ -69,6 +69,7 @@ function LoginForm({ initialValues, handleSubmit }: LoginFormProps) {
 
             <Button
               disabled={isSubmitting}
+              loading={isSubmitting}
               type="primary"
               className="w-full"
               htmlType="submit"
@@ -76,7 +77,7 @@ function LoginForm({ initialValues, handleSubmit }: LoginFormProps) {
               Login
             </Button>
 
-            {errors.submitError && (
+            {!!errors.submitError && (
               <Alert
                 className="mt-5"
                 title="Email or password is incorrect. Please try again."

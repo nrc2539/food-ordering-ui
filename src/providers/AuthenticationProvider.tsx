@@ -1,10 +1,12 @@
 "use client";
 
 import { useQuery, useQueryClient } from "@tanstack/react-query";
-import { createContext } from "react";
+import { useRouter } from "next/navigation";
+import { createContext, useContext, useEffect, useCallback } from "react";
 
 import { UserType } from "@/models/user/UserType";
 import { getProfile } from "@/actions/user-actions";
+import { logout } from "@/actions/auth-actions";
 
 interface AuthenticationContextType {
   user?: UserType;
@@ -20,6 +22,7 @@ export const AuthenticationContext = createContext<AuthenticationContextType>(
 
 export function AuthenticationProvider({ children }: React.PropsWithChildren) {
   const queryClient = useQueryClient();
+  const router = useRouter();
 
   const {
     data: userData,
@@ -31,13 +34,18 @@ export function AuthenticationProvider({ children }: React.PropsWithChildren) {
   });
 
   async function clearUserData() {
-    // TODO: call server action to clear cookies
+    await logout();
     await queryClient.clear();
+    router.replace("/management/login");
   }
 
-  function refetchProfile() {
+  const refetchProfile = useCallback(() => {
     refetch();
-  }
+  }, [refetch]);
+
+  useEffect(() => {
+    refetchProfile();
+  }, [refetchProfile]);
 
   return (
     <AuthenticationContext.Provider
@@ -52,4 +60,8 @@ export function AuthenticationProvider({ children }: React.PropsWithChildren) {
       {children}
     </AuthenticationContext.Provider>
   );
+}
+
+export function useAuthentication() {
+  return useContext(AuthenticationContext);
 }
