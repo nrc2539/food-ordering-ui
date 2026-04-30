@@ -10,6 +10,7 @@ import {
 } from "@tabler/icons-react";
 
 import { cn } from "@/libs/utils";
+import { FeatureEnum } from "@/components/guards/RolePermissionGuard/interface";
 
 import { SidebarMenuProps } from "./interface";
 import SidebarMenuItem from "./components/SidebarMenuItem";
@@ -21,26 +22,31 @@ function SidebarMenu({ className }: SidebarMenuProps) {
       title: "Orders",
       path: "/management/orders",
       icon: <IconReceiptFilled className="size-5" />,
+      feature: FeatureEnum.ORDERS,
     },
     {
       title: "Tables",
       path: "/management/tables",
       icon: <IconToolsKitchen2Filled className="size-5" />,
+      feature: FeatureEnum.TABLES,
     },
     {
       title: "Staff",
       path: "/management/staff",
       icon: <IconUserFilled className="size-5" />,
+      feature: FeatureEnum.STAFF,
     },
     {
       title: "Categories",
       path: "/management/categories",
       icon: <IconCategoryFilled className="size-5" />,
+      feature: FeatureEnum.CATEGORIES,
     },
     {
       title: "Menus",
       path: "/management/menus",
       icon: <IconBookFilled className="size-5" />,
+      feature: FeatureEnum.MENUS,
     },
   ];
 
@@ -64,6 +70,7 @@ function SidebarMenu({ className }: SidebarMenuProps) {
           title={menu.title}
           path={menu.path}
           icon={menu.icon}
+          feature={menu.feature}
           key={index}
         />
       ))}

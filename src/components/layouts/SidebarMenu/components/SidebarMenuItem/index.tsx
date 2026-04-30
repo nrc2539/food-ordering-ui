@@ -4,6 +4,9 @@ import Link from "next/link";
 import { usePathname } from "next/navigation";
 
 import { cn } from "@/libs/utils";
+import { permissions } from "@/components/guards/RolePermissionGuard";
+import { useAuthentication } from "@/providers/AuthenticationProvider";
+
 import { SidebarMenuItemProps } from "./interface";
 
 function SidebarMenuItem({
@@ -11,9 +14,11 @@ function SidebarMenuItem({
   title,
   path,
   icon,
+  feature,
 }: SidebarMenuItemProps) {
   const pathname = usePathname();
   const isActive = pathname.includes(path);
+  const { user } = useAuthentication();
   return (
     <Link
       href={path}
@@ -22,6 +27,9 @@ function SidebarMenuItem({
         {
           "text-orange-700 bg-amber-100 rounded-lg": isActive,
           "flex items-center space-x-2": !!icon,
+          hidden:
+            user &&
+            !permissions[user.role.name as "admin" | "staff"].includes(feature),
         },
         className,
       )}

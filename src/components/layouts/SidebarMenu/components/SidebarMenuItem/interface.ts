@@ -1,6 +1,9 @@
+import { FeatureEnum } from "@/components/guards/RolePermissionGuard/interface";
+
 export interface SidebarMenuItemProps {
   title: string;
   path: string;
   icon?: React.ReactNode;
   className?: string;
+  feature: FeatureEnum;
 }
