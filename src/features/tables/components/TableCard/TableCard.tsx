@@ -6,44 +6,30 @@ import {
   IconTrashXFilled,
 } from "@tabler/icons-react";
 import { Button, Card, QRCode, Tag } from "antd";
-import { useMutation } from "@tanstack/react-query";
 
+import { cn } from "@/libs/utils";
+import { BASE_URL } from "@/libs/constant";
 import ConfirmModal from "@/components/ConfirmModal";
-import { deleteTable, updateTable } from "@/libs/actions/table-actions";
-import { TableFormType } from "@/models/table/TableFormType";
 import { useAlertNotification } from "@/hooks/useAlertNotification";
+import { TableSessionStatusEnum } from "@/enums/TableSessionStatusEnum";
+import { useAuthentication } from "@/providers/AuthenticationProvider";
 
 import { TableCardProps } from "./interface";
 import TableFormModal from "../TableFormModal";
-import { TableSessionStatusEnum } from "@/enums/TableSessionStatusEnum";
-import { createTableSession } from "@/libs/actions/table-sessions-actions";
-import { BASE_URL } from "@/libs/constant";
-import { cn } from "@/libs/utils";
-import { useAuthentication } from "@/providers/AuthenticationProvider";
 
 function TableCard({
   data,
   modalState,
+  isGeneratingQR,
   handleModalStateChange,
   handleCloseModal,
+  handleUpdateTable,
+  handleDeleteTable,
+  handleGenerateQR,
 }: TableCardProps) {
   const alertNotification = useAlertNotification();
   const { user } = useAuthentication();
   const isAdmin = user?.role.name === "admin";
-  const { mutateAsync: handleUpdateTable } = useMutation({
-    mutationFn: (params: { id: number; form: TableFormType }) =>
-      updateTable(params),
-  });
-  const { mutateAsync: handleDeleteTable } = useMutation({
-    mutationFn: (id: number) => deleteTable(id),
-  });
-  const { mutateAsync: handleGenerateQR, isPending: isGeneratingQR } =
-    useMutation({
-      mutationFn: (params: {
-        tableId: number;
-        status: TableSessionStatusEnum;
-      }) => createTableSession(params),
-    });
 
   const activeSession = data.sessions?.find(
     (v) => v.status === TableSessionStatusEnum.ACTIVE,
