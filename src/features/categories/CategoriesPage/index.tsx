@@ -1,11 +1,14 @@
-import { CategoryType } from "@/models/category/CategoryType";
+import { Empty } from "antd";
+
+import { getCategories } from "@/libs/fetching/category-data";
+
 import CreateCategoryButton from "../components/CreateCategoryButton";
 import { CategoryCard } from "../components/CategoryCard";
 
-function CategoriesPage() {
-  const mockCategories: CategoryType[] = Array.from({ length: 5 }).map(
-    (_, i) => ({ id: i + 1, name: `Category ${i + 1}`, menus: [] }),
-  );
+async function CategoriesPage() {
+  const res = await getCategories();
+  const categories = res.data;
+  console.log(categories);
   return (
     <section>
       <div className="mb-5 flex items-start justify-between">
@@ -13,9 +16,16 @@ function CategoriesPage() {
         <CreateCategoryButton />
       </div>
       <div className="grid gap-3 tablet:gap-4 grid-cols-1 tablet:grid-cols-4">
-        {mockCategories.map((category) => (
-          <CategoryCard key={category.id} data={category} />
-        ))}
+        {categories.length > 0 ? (
+          categories.map((category) => (
+            <CategoryCard key={category.id} data={category} />
+          ))
+        ) : (
+          <Empty
+            className="col-span-full mt-5"
+            description="No category data"
+          />
+        )}
       </div>
     </section>
   );

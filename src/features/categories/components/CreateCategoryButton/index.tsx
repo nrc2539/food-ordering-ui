@@ -2,13 +2,27 @@
 import { useState } from "react";
 import { Button } from "antd";
 import { IconCirclePlusFilled } from "@tabler/icons-react";
+import { useMutation } from "@tanstack/react-query";
 
 import { cn } from "@/libs/utils";
+import { createCategory } from "@/libs/actions/category-actions";
+import { CategoryFormType } from "@/models/category/CategoryFormType";
+import { useAlertNotification } from "@/hooks/useAlertNotification";
+
 import CategoryFormModal from "../CategoryFormModal";
 import { CreateCategoryButtonProps } from "./interface";
 
 function CreateCategoryButton({ className }: CreateCategoryButtonProps) {
   const [openModal, setOpenModal] = useState(false);
+  const alertNotification = useAlertNotification();
+
+  const { mutateAsync: handleCreateCategory } = useMutation({
+    mutationFn: (form: CategoryFormType) => createCategory(form),
+  });
+
+  function handleCloseModal() {
+    setOpenModal(false);
+  }
 
   return (
     <>
@@ -24,13 +38,22 @@ function CreateCategoryButton({ className }: CreateCategoryButtonProps) {
       <CategoryFormModal
         open={openModal}
         initialValue={{ name: "" }}
-        onOk={() => {
-          // TODO: call API create Category
-          setOpenModal(false);
+        onOk={async (values) => {
+          await handleCreateCategory(values, {
+            onSuccess: () => {
+              alertNotification.success({
+                message: "Create new category successfully.",
+              });
+              handleCloseModal();
+            },
+            onError: () => {
+              alertNotification.error({
+                message: "Cannot create new category.",
+              });
+            },
+          });
         }}
-        onCancel={() => {
-          setOpenModal(false);
-        }}
+        onCancel={handleCloseModal}
       />
     </>
   );
