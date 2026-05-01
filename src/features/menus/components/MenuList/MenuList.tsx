@@ -1,22 +1,27 @@
 import { Button, Switch, Table, TableProps } from "antd";
 import { IconPencilCog, IconTrashXFilled } from "@tabler/icons-react";
 
-import { MenuType } from "@/models/menu/MenuType";
-import { CategoryType } from "@/models/category/CategoryType";
+import { formatNumber } from "@/libs/utils";
 import ConfirmModal from "@/components/ConfirmModal";
 import { useAlertNotification } from "@/hooks/useAlertNotification";
-import MenuFormModal from "../MenuFormModal";
+import { MenuType } from "@/models/menu/MenuType";
+import { CategoryType } from "@/models/category/CategoryType";
+
 import { MenuListProps } from "./interface";
+import MenuFormModal from "../MenuFormModal";
 
 function MenuList({
   className,
   menus,
   categories,
   modalState,
+  isUpdatingMenu,
   handleModalStateChange,
   handleCloseModal,
+  handleUpdateMenu,
+  handleDeleteMenu,
 }: MenuListProps) {
-  const { success } = useAlertNotification();
+  const alertNotification = useAlertNotification();
   const columns: TableProps<MenuType>["columns"] = [
     {
       title: "Menu Name",
@@ -37,7 +42,7 @@ function MenuList({
       dataIndex: "price",
       key: "price",
       width: "20%",
-      render: (val) => <p>{val}</p>,
+      render: (val: number) => <p>{formatNumber(val, { minFracDigits: 2 })}</p>,
     },
     {
       title: "Status",
@@ -47,9 +52,30 @@ function MenuList({
       render: (val: boolean | undefined, record) => (
         <Switch
           checked={val}
-          onChange={(v) => {
-            // TODO: call API update menu item
-            success({ message: "Update status success" });
+          loading={isUpdatingMenu}
+          onChange={async (v) => {
+            if (!record.id) return;
+            await handleUpdateMenu(
+              {
+                id: record.id,
+                form: {
+                  name: record.name,
+                  price: record.price,
+                  isAvailable: v,
+                },
+              },
+              {
+                onSuccess: () => {
+                  alertNotification.success({
+                    message: "Update menu status successfully.",
+                  });
+                },
+                onError: () =>
+                  alertNotification.error({
+                    message: "Update menu status failed.",
+                  }),
+              },
+            );
           }}
         />
       ),
@@ -111,10 +137,22 @@ function MenuList({
           open
           isEdit
           initialValue={modalState.value}
-          onOk={(values) => {
-            // TODO: handle call API update menu
-            success({ message: "Update menu item success" });
-            handleCloseModal();
+          onOk={async (form) => {
+            if (!modalState.value?.id) return;
+            await handleUpdateMenu(
+              { id: modalState.value.id, form },
+              {
+                onSuccess: () => {
+                  alertNotification.success({
+                    message: "Update menu successfully.",
+                  });
+                  handleCloseModal();
+                },
+                onError: () => {
+                  alertNotification.error({ message: "Update menu failed." });
+                },
+              },
+            );
           }}
           categoryOptions={categories.map((v) => ({
             value: v.id,
@@ -125,9 +163,19 @@ function MenuList({
       )}
       <ConfirmModal
         open={modalState.type === "delete"}
-        onConfirm={() => {
-          // TODO: call API delete category
-          handleCloseModal();
+        onConfirm={async () => {
+          if (!modalState.value?.id) return;
+          await handleDeleteMenu(modalState.value.id, {
+            onSuccess: () => {
+              alertNotification.info({
+                message: "Delete menu successfully.",
+              });
+              handleCloseModal();
+            },
+            onError: () => {
+              alertNotification.error({ message: "Delete menu failed." });
+            },
+          });
         }}
         onCancel={handleCloseModal}
       >
