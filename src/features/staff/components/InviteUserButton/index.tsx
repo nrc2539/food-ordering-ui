@@ -10,11 +10,10 @@ import { useAlertNotification } from "@/hooks/useAlertNotification";
 
 function InviteUserButton({ className, roles }: InviteUserButtonProps) {
   const [openModal, setOpenModal] = useState(false);
-  const { success, contextHolder } = useAlertNotification();
+  const { success } = useAlertNotification();
 
   return (
     <>
-      {contextHolder}
       <Button
         type="primary"
         size="large"

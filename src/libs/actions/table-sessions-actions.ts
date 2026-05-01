@@ -1,5 +1,7 @@
 "use server";
 
+import { revalidatePath } from "next/cache";
+
 import api from "@/libs/axios";
 import { TableSessionStatusEnum } from "@/enums/TableSessionStatusEnum";
 import { TableSessionType } from "@/models/table/TableSessionType";
@@ -9,6 +11,7 @@ async function createTableSession(bodyReq: {
   status: TableSessionStatusEnum;
 }): Promise<TableSessionType> {
   const response = await api.post<TableSessionType>("/table-sessions", bodyReq);
+  revalidatePath("/management/tables");
   return response.data;
 }
 

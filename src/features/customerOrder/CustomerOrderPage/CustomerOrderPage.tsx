@@ -18,7 +18,7 @@ export default function CustomerOrderPage({
   categories,
   menus,
 }: CustomerOrderPageProps) {
-  const { success, warning, info, error, contextHolder } = useAlertMessage();
+  const { success, warning, info, error } = useAlertMessage();
 
   const [activeCategory, setActiveCategory] = useState<number>(0); // Default to "All"
   const [cartItems, setCartItems] = useState<CartItemType[]>([]);
@@ -118,7 +118,6 @@ export default function CustomerOrderPage({
 
   return (
     <div className="min-h-screen bg-gray-50 pb-20 relative">
-      {contextHolder}
       {/* Header */}
       <div className="relative z-11 flex items-center justify-between bg-white px-4 laptop:px-6 py-4">
         <div>

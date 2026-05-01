@@ -12,10 +12,15 @@ export function withTableCard(Component: React.FC<TableCardProps>) {
       value: undefined,
     });
 
+    function handleCloseModal() {
+      setModalState({ type: undefined, value: undefined });
+    }
+
     const componentProps: TableCardProps = {
       ...props,
       modalState,
       handleModalStateChange: setModalState,
+      handleCloseModal,
     };
     return <Component {...componentProps} />;
   }

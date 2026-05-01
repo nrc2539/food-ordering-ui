@@ -61,7 +61,6 @@ function RolePermissionGuard({ children }: RolePermissionGuardProps) {
 
   return (
     <>
-      {alertMessage.contextHolder}
       <Spin description="Checking permission..." size="large">
         <div className="w-dvw h-dvh" />
       </Spin>

@@ -16,7 +16,7 @@ function MenuList({
   handleModalStateChange,
   handleCloseModal,
 }: MenuListProps) {
-  const { success, contextHolder } = useAlertNotification();
+  const { success } = useAlertNotification();
   const columns: TableProps<MenuType>["columns"] = [
     {
       title: "Menu Name",
@@ -100,7 +100,6 @@ function MenuList({
   ];
   return (
     <div className={className}>
-      {contextHolder}
       <Table
         rowKey={(record) => record.id}
         columns={columns}

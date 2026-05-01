@@ -6,6 +6,9 @@ import { AntdRegistry } from "@ant-design/nextjs-registry";
 import CustomAntdConfigProvider from "@/providers/CustomAntdConfigProvider";
 import { ReactQueryProvider } from "@/providers/ReactQueryProvider";
 import { AuthenticationProvider } from "@/providers/AuthenticationProvider";
+import { Suspense } from "react";
+import { AlertMessageProvider } from "@/providers/AlertMessageProvider";
+import { AlertNotificationProvider } from "@/providers/AlertNotificationProvider";
 
 const mitr = Mitr({
   weight: ["200", "300", "400", "500", "600", "700"],
@@ -28,9 +31,15 @@ export default function RootLayout({
       <body className="min-h-full">
         <ReactQueryProvider>
           <AuthenticationProvider>
-            <AntdRegistry>
-              <CustomAntdConfigProvider>{children}</CustomAntdConfigProvider>
-            </AntdRegistry>
+            <Suspense>
+              <AntdRegistry>
+                <CustomAntdConfigProvider>
+                  <AlertNotificationProvider>
+                    <AlertMessageProvider>{children}</AlertMessageProvider>
+                  </AlertNotificationProvider>
+                </CustomAntdConfigProvider>
+              </AntdRegistry>
+            </Suspense>
           </AuthenticationProvider>
         </ReactQueryProvider>
       </body>

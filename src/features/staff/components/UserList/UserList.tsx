@@ -16,7 +16,7 @@ function UserList({
   handleModalStateChange,
   handleCloseModal,
 }: UserListProps) {
-  const { success, contextHolder } = useAlertNotification();
+  const { success } = useAlertNotification();
   const columns: TableProps<UserType>["columns"] = [
     {
       title: "Staff Name",
@@ -84,7 +84,6 @@ function UserList({
   ];
   return (
     <div className={className}>
-      {contextHolder}
       <Table
         rowKey={(record) => record.id}
         columns={columns}

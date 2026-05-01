@@ -6,16 +6,33 @@ import { useState } from "react";
 import { cn } from "@/libs/utils";
 import TableFormModal from "../TableFormModal";
 import { CreateTableButtonProps } from "./interface";
+import { createTable } from "@/libs/actions/table-actions";
+import { useMutation } from "@tanstack/react-query";
+import { TableFormType } from "@/models/table/TableFormType";
+import { useAlertNotification } from "@/hooks/useAlertNotification";
+import { useAuthentication } from "@/providers/AuthenticationProvider";
 
 function CreateTableButton({ className }: CreateTableButtonProps) {
   const [openModal, setOpenModal] = useState(false);
+  const alertNotification = useAlertNotification();
+  const { user } = useAuthentication();
+  const isAdmin = user?.role.name === "admin";
+
+  const { mutateAsync: handleCreateTable } = useMutation({
+    mutationFn: (form: TableFormType) => createTable(form),
+  });
 
   return (
     <>
       <Button
         type="primary"
         size="large"
-        className={cn("flex items-center font-medium bg-orange-700", className)}
+        disabled={!isAdmin}
+        className={cn(
+          "flex items-center font-medium bg-orange-700",
+          className,
+          { hidden: !isAdmin },
+        )}
         onClick={() => setOpenModal(true)}
       >
         <IconCirclePlusFilled className="size-5" />
@@ -24,9 +41,18 @@ function CreateTableButton({ className }: CreateTableButtonProps) {
       <TableFormModal
         open={openModal}
         initialValue={{ name: "" }}
-        onOk={() => {
-          // TODO: call API create Table
-          setOpenModal(false);
+        onOk={async (form) => {
+          await handleCreateTable(form, {
+            onSuccess: () => {
+              alertNotification.success({
+                message: "Create new table successfully.",
+              });
+              setOpenModal(false);
+            },
+            onError: () => {
+              alertNotification.error({ message: "Cannot create new table." });
+            },
+          });
         }}
         onCancel={() => {
           setOpenModal(false);

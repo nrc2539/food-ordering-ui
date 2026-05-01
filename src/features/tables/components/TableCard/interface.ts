@@ -8,6 +8,7 @@ export interface WithTableCardProps {
 export interface TableCardProps extends WithTableCardProps {
   modalState: TableCardModalStateType;
   handleModalStateChange: (state: TableCardModalStateType) => void;
+  handleCloseModal: () => void;
 }
 
 export type TableCardModalStateType = {
