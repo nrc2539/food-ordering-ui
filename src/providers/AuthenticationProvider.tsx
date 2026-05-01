@@ -1,12 +1,11 @@
 "use client";
 
+import axios from "axios";
 import { useQuery, useQueryClient } from "@tanstack/react-query";
-import { useRouter } from "next/navigation";
 import { createContext, useContext, useEffect, useCallback } from "react";
 
 import { UserType } from "@/models/user/UserType";
-import { getProfile } from "@/actions/user-actions";
-import { logout } from "@/actions/auth-actions";
+import { logout } from "@/libs/actions/auth-actions";
 
 interface AuthenticationContextType {
   user?: UserType;
@@ -20,9 +19,13 @@ export const AuthenticationContext = createContext<AuthenticationContextType>(
   {} as AuthenticationContextType,
 );
 
+async function getProfile(): Promise<UserType> {
+  const res = await axios.get("/api/profile");
+  return res.data;
+}
+
 export function AuthenticationProvider({ children }: React.PropsWithChildren) {
   const queryClient = useQueryClient();
-  const router = useRouter();
 
   const {
     data: userData,
@@ -36,7 +39,6 @@ export function AuthenticationProvider({ children }: React.PropsWithChildren) {
   async function clearUserData() {
     await logout();
     await queryClient.clear();
-    router.replace("/management/login");
   }
 
   const refetchProfile = useCallback(() => {

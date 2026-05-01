@@ -1,7 +1,7 @@
 import axios, { AxiosError } from "axios";
 import { API_URL } from "./constant";
 import { cookies } from "next/headers";
-import { refreshToken } from "@/actions/auth-actions";
+import { refreshToken } from "@/libs/actions/auth-actions";
 
 type AxiosErrorType = AxiosError<{ code: number; message: string }>;
 

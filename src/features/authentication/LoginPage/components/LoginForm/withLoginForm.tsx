@@ -2,7 +2,7 @@ import { FormikHelpers } from "formik";
 import { useMutation } from "@tanstack/react-query";
 
 import { LoginFormType } from "@/models/authentication/LoginFormType";
-import { login } from "@/actions/auth-actions";
+import { login } from "@/libs/actions/auth-actions";
 import { useAuthentication } from "@/providers/AuthenticationProvider";
 
 import { LoginFormProps } from "./interface";

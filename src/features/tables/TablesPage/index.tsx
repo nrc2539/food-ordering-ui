@@ -1,4 +1,4 @@
-import { getTables } from "@/fetching/table-data";
+import { getTables } from "@/libs/fetching/table-data";
 
 import { TableCard } from "../components/TableCard";
 import CreateTableButton from "../components/CreateTableButton";

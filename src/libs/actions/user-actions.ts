@@ -4,10 +4,10 @@ import api from "@/libs/axios";
 import { UserFormType } from "@/models/user/UserFormType";
 import { UserType } from "@/models/user/UserType";
 
-async function getProfile(): Promise<UserType> {
-  const res = await api.get<UserType>("/users/profile");
-  return res.data;
-}
+// async function getProfile(): Promise<UserType> {
+//   const res = await api.get<UserType>("/users/profile");
+//   return res.data;
+// }
 
 async function createUser(params: UserFormType): Promise<UserType> {
   const createData = {
@@ -36,4 +36,4 @@ async function deleteUser(id: number): Promise<void> {
   await api.delete(`/users/${id}`);
 }
 
-export { getProfile, createUser, updateUser, deleteUser };
+export { createUser, updateUser, deleteUser };
