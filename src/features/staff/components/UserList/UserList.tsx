@@ -5,6 +5,8 @@ import { RoleType } from "@/models/user/RoleType";
 import { UserType } from "@/models/user/UserType";
 import ConfirmModal from "@/components/ConfirmModal";
 import { useAlertNotification } from "@/hooks/useAlertNotification";
+import { useAuthentication } from "@/providers/AuthenticationProvider";
+import { cn } from "@/libs/utils";
 
 import MenuFormModal from "../UserFormModal";
 import { UserListProps } from "./interface";
@@ -19,6 +21,7 @@ function UserList({
   handleUpdateUser,
   handleDeleteUser,
 }: UserListProps) {
+  const { user, refetchProfile } = useAuthentication();
   const alertNotification = useAlertNotification();
   const columns: TableProps<UserType>["columns"] = [
     {
@@ -65,8 +68,11 @@ function UserList({
           >
             <IconPencilCog className="size-5 text-blue-500" />
           </Button>
+
           <Button
             type="text"
+            className={cn({ invisible: user?.id === record.id })}
+            disabled={user?.id === record.id}
             onClick={() => {
               handleModalStateChange({
                 type: "delete",
@@ -97,6 +103,7 @@ function UserList({
         <MenuFormModal
           open
           isEdit
+          isCurrentUser={user?.id === modalState.value.id}
           initialValue={modalState.value}
           onOk={async (form) => {
             if (!modalState.value?.id) return;
@@ -104,6 +111,9 @@ function UserList({
               { id: modalState.value.id, form },
               {
                 onSuccess: () => {
+                  if (user?.id === modalState.value?.id) {
+                    refetchProfile();
+                  }
                   alertNotification.success({
                     message: "Update staff information successfully.",
                   });

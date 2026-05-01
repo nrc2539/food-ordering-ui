@@ -12,11 +12,7 @@ export default function AppLayout({ children }: { children: React.ReactNode }) {
         <main className="flex items-start w-full h-dvh bg-white">
           <SidebarMenu className="w-full max-w-xs" />
           <section className="w-full h-full">
-            <NavBar
-              className="h-16"
-              userName="Mock username"
-              roleName="Admin"
-            />
+            <NavBar className="h-16" />
             <div className="p-4 tablet:p-5 h-[calc(100dvh-64px)] w-full bg-[#fbfbfb]">
               {children}
             </div>

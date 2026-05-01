@@ -10,6 +10,7 @@ export default function UserFormModal({
   open,
   initialValue,
   isEdit,
+  isCurrentUser,
   roleOptions,
   onOk,
   onCancel,
@@ -94,6 +95,7 @@ export default function UserFormModal({
               help={touched.roleId && errors.roleId}
             >
               <Select
+                disabled={isCurrentUser}
                 value={values.roleId}
                 placeholder="Select role"
                 onChange={(v) => {

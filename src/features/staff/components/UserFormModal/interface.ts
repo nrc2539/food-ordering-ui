@@ -6,6 +6,7 @@ export interface UserFormModalProps {
   open: boolean;
   title?: string;
   isEdit?: boolean;
+  isCurrentUser?: boolean;
   initialValue: UserFormType;
   roleOptions: SelectType<number>[];
   onOk: (values: UserFormType) => void;
