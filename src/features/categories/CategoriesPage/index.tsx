@@ -8,7 +8,7 @@ import { CategoryCard } from "../components/CategoryCard";
 async function CategoriesPage() {
   const res = await getCategories();
   const categories = res.data;
-  console.log(categories);
+
   return (
     <section>
       <div className="mb-5 flex items-start justify-between">
