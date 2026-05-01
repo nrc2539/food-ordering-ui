@@ -1,4 +1,9 @@
 import { useState } from "react";
+import { useMutation } from "@tanstack/react-query";
+
+import { UserFormType } from "@/models/user/UserFormType";
+import { deleteUser, updateUser } from "@/libs/actions/user-actions";
+
 import {
   UserListModalStateType,
   UserListProps,
@@ -12,6 +17,15 @@ export function withUserList(Component: React.FC<UserListProps>) {
       value: undefined,
     });
 
+    const { mutateAsync: handleUpdateUser } = useMutation({
+      mutationFn: (params: { id: number; form: UserFormType }) =>
+        updateUser(params),
+    });
+
+    const { mutateAsync: handleDeleteUser } = useMutation({
+      mutationFn: (id: number) => deleteUser(id),
+    });
+
     function handleCloseModal() {
       setModalState({ type: undefined, value: undefined });
     }
@@ -21,6 +35,8 @@ export function withUserList(Component: React.FC<UserListProps>) {
       modalState,
       handleModalStateChange: setModalState,
       handleCloseModal,
+      handleUpdateUser,
+      handleDeleteUser,
     };
     return <Component {...componentProps} />;
   }

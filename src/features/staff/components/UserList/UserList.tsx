@@ -5,6 +5,7 @@ import { RoleType } from "@/models/user/RoleType";
 import { UserType } from "@/models/user/UserType";
 import ConfirmModal from "@/components/ConfirmModal";
 import { useAlertNotification } from "@/hooks/useAlertNotification";
+
 import MenuFormModal from "../UserFormModal";
 import { UserListProps } from "./interface";
 
@@ -15,8 +16,10 @@ function UserList({
   modalState,
   handleModalStateChange,
   handleCloseModal,
+  handleUpdateUser,
+  handleDeleteUser,
 }: UserListProps) {
-  const { success } = useAlertNotification();
+  const alertNotification = useAlertNotification();
   const columns: TableProps<UserType>["columns"] = [
     {
       title: "Staff Name",
@@ -95,10 +98,24 @@ function UserList({
           open
           isEdit
           initialValue={modalState.value}
-          onOk={(values) => {
-            // TODO: handle call API update user
-            success({ message: "Update staff information success" });
-            handleCloseModal();
+          onOk={async (form) => {
+            if (!modalState.value?.id) return;
+            await handleUpdateUser(
+              { id: modalState.value.id, form },
+              {
+                onSuccess: () => {
+                  alertNotification.success({
+                    message: "Update staff information successfully.",
+                  });
+                  handleCloseModal();
+                },
+                onError: () => {
+                  alertNotification.error({
+                    message: "Update staff information failed.",
+                  });
+                },
+              },
+            );
           }}
           roleOptions={roles.map((v) => ({
             value: v.id,
@@ -109,9 +126,21 @@ function UserList({
       )}
       <ConfirmModal
         open={modalState.type === "delete"}
-        onConfirm={() => {
-          // TODO: call API delete staff
-          handleCloseModal();
+        onConfirm={async () => {
+          if (!modalState.value?.id) return;
+          await handleDeleteUser(modalState.value.id, {
+            onSuccess: () => {
+              alertNotification.success({
+                message: "Delete staff information successfully.",
+              });
+              handleCloseModal();
+            },
+            onError: () => {
+              alertNotification.error({
+                message: "Delete staff information failed.",
+              });
+            },
+          });
         }}
         onCancel={handleCloseModal}
       >

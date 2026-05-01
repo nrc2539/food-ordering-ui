@@ -2,15 +2,27 @@
 import { useState } from "react";
 import { Button } from "antd";
 import { IconCirclePlusFilled } from "@tabler/icons-react";
+import { useMutation } from "@tanstack/react-query";
 
 import { cn } from "@/libs/utils";
 import MenuFormModal from "../UserFormModal";
-import { InviteUserButtonProps } from "./interface";
 import { useAlertNotification } from "@/hooks/useAlertNotification";
+import { createUser } from "@/libs/actions/user-actions";
+import { UserFormType } from "@/models/user/UserFormType";
+
+import { InviteUserButtonProps } from "./interface";
 
 function InviteUserButton({ className, roles }: InviteUserButtonProps) {
   const [openModal, setOpenModal] = useState(false);
-  const { success } = useAlertNotification();
+  const alertNotification = useAlertNotification();
+
+  const { mutateAsync: handleCreateUser } = useMutation({
+    mutationFn: (form: UserFormType) => createUser(form),
+  });
+
+  function handleCloseModal() {
+    setOpenModal(false);
+  }
 
   return (
     <>
@@ -30,14 +42,20 @@ function InviteUserButton({ className, roles }: InviteUserButtonProps) {
           value: v.id,
           label: v.name,
         }))}
-        onOk={() => {
-          // TODO: call API create User
-          setOpenModal(false);
-          success({ message: "Invite user success" });
+        onOk={async (form) => {
+          await handleCreateUser(form, {
+            onSuccess: () => {
+              alertNotification.success({
+                message: "Invite new user successfully.",
+              });
+              handleCloseModal();
+            },
+            onError: () => {
+              alertNotification.error({ message: "Invite new user failed." });
+            },
+          });
         }}
-        onCancel={() => {
-          setOpenModal(false);
-        }}
+        onCancel={handleCloseModal}
       />
     </>
   );

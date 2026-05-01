@@ -1,35 +1,23 @@
-import { RoleType } from "@/models/user/RoleType";
-import InviteUserButton from "../components/InviteUserButton";
-import { UserType } from "@/models/user/UserType";
-import { UserList } from "../components/UserList";
+import { getUsers } from "@/libs/fetching/user-data";
+import { getRoles } from "@/libs/fetching/role-data";
 
-function StaffPage() {
-  const mockRoles: RoleType[] = [
-    { id: 1, name: "admin" },
-    { id: 2, name: "staff" },
-  ];
-  const mockUsers: UserType[] = Array.from({ length: 12 }).map((_, i) => ({
-    id: i + 1,
-    name: `Usermock ${i < 2 ? "Admin" : "User"}`,
-    email: `user${i + 1}@email.com`,
-    role:
-      i < 2
-        ? {
-            id: mockRoles[0].id,
-            name: mockRoles[0].name,
-          }
-        : {
-            id: mockRoles[1].id,
-            name: mockRoles[1].name,
-          },
-  }));
+import { UserList } from "../components/UserList";
+import InviteUserButton from "../components/InviteUserButton";
+
+async function StaffPage() {
+  const roleResponse = await getRoles();
+  const roles = roleResponse.data;
+
+  const responseUser = await getUsers();
+  const users = responseUser.data;
+
   return (
     <section>
       <div className="mb-5 flex items-start justify-between">
         <h1 className="text-3xl font-medium">Staff Management</h1>
-        <InviteUserButton roles={mockRoles} />
+        <InviteUserButton roles={roles} />
       </div>
-      <UserList className="" users={mockUsers} roles={mockRoles} />
+      <UserList className="" users={users} roles={roles} />
     </section>
   );
 }

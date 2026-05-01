@@ -82,6 +82,7 @@ export default function UserFormModal({
                 name="email"
                 placeholder="Email"
                 value={values.email}
+                disabled={isEdit}
                 onChange={handleChange}
                 onBlur={handleBlur}
               />

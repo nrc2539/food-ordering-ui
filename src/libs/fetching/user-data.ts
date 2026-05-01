@@ -1,11 +1,14 @@
+import { PaginationType } from "@/interfaces/PaginationType";
 import api from "@/libs/axios";
 
 import { UserResponseType } from "@/models/user/UserResponseType";
 import { UserType } from "@/models/user/UserType";
 
-async function getUsers(params: {
-  roleIds?: number[];
-}): Promise<UserResponseType> {
+async function getUsers(
+  params?: PaginationType & {
+    roleIds?: number[];
+  },
+): Promise<UserResponseType> {
   const res = await api.get<UserType[]>("/users", {
     params,
   });

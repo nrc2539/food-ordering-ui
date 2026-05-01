@@ -3,11 +3,7 @@
 import api from "@/libs/axios";
 import { UserFormType } from "@/models/user/UserFormType";
 import { UserType } from "@/models/user/UserType";
-
-// async function getProfile(): Promise<UserType> {
-//   const res = await api.get<UserType>("/users/profile");
-//   return res.data;
-// }
+import { revalidatePath } from "next/cache";
 
 async function createUser(params: UserFormType): Promise<UserType> {
   const createData = {
@@ -18,22 +14,25 @@ async function createUser(params: UserFormType): Promise<UserType> {
     password: `12345678`, // Mock password
   };
   const res = await api.post<UserType>("/users", createData);
+  revalidatePath("/management/staff");
   return res.data;
 }
 
 async function updateUser(params: {
-  userId: number;
+  id: number;
   form: UserFormType;
 }): Promise<void> {
   const updateData = {
     name: params.form.name,
     roleId: params.form.roleId,
   };
-  await api.patch(`/users/${params.userId}`, updateData);
+  await api.patch(`/users/${params.id}`, updateData);
+  revalidatePath("/management/staff");
 }
 
 async function deleteUser(id: number): Promise<void> {
   await api.delete(`/users/${id}`);
+  revalidatePath("/management/staff");
 }
 
 export { createUser, updateUser, deleteUser };
