@@ -5,23 +5,25 @@ import { Drawer, Empty, Divider, Tag } from "antd";
 import { HistoryOutlined } from "@ant-design/icons";
 
 import { formatDate, formatNumber } from "@/libs/utils";
-import { OrderHistorySectionProps } from "./interface";
+import { OrderStatusEnum, orderStatusLabel } from "@/enums/OrderStatusEnum";
 
-export const OrderHistorySection: React.FC<OrderHistorySectionProps> = ({
+import { OrderHistoryDrawerProps } from "./interface";
+
+export const OrderHistoryDrawer: React.FC<OrderHistoryDrawerProps> = ({
   isOpen,
   onClose,
   orders,
 }) => {
   const getStatusColor = (status: string) => {
     switch (status.toLowerCase()) {
-      case "completed":
+      case OrderStatusEnum.COMPLETED:
         return "green";
-      case "pending":
+      case OrderStatusEnum.IN_PROGRESS:
         return "blue";
-      case "cancelled":
+      case OrderStatusEnum.CANCELLED:
         return "red";
       default:
-        return "default";
+        return "gold";
     }
   };
 
@@ -60,23 +62,25 @@ export const OrderHistorySection: React.FC<OrderHistorySectionProps> = ({
                       {formatDate(order.createdAt)}
                     </p>
                   </div>
-                  <Tag color={getStatusColor(order.status)}>{order.status}</Tag>
+                  <Tag color={getStatusColor(order.status)}>
+                    {orderStatusLabel[order.status]}
+                  </Tag>
                 </div>
 
                 {/* Order Items */}
                 <div className="space-y-2 mb-3">
-                  {order.items && order.items.length > 0 ? (
-                    order.items.map((item, index) => (
+                  {order.orderItems && order.orderItems.length > 0 ? (
+                    order.orderItems.map((item, index) => (
                       <div key={index}>
                         <div className="flex justify-between items-center text-sm">
                           <span className="text-gray-700">
-                            {item.menu.name}
+                            {item.menuItem.name}
                           </span>
                           <span className="text-gray-600">
                             x{formatNumber(item.quantity)}
                           </span>
                         </div>
-                        {index < (order.items?.length || 0) - 1 && (
+                        {index < (order.orderItems?.length || 0) - 1 && (
                           <Divider className="my-1!" />
                         )}
                       </div>

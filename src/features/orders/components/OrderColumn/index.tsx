@@ -1,4 +1,4 @@
-import { Badge } from "antd";
+import { Badge, Empty } from "antd";
 
 import { cn } from "@/libs/utils";
 import { OrderColumnProps } from "./inteface";
@@ -22,9 +22,11 @@ function OrderColumn({
         <Badge className="bg-blue" count={totalOrder} showZero />
       </div>
 
-      {orders.map((v) => (
-        <OrderCard key={v.id} order={v} />
-      ))}
+      {orders.length ? (
+        orders.map((v) => <OrderCard key={v.id} order={v} />)
+      ) : (
+        <Empty className="mt-5 lowercase" description={`no order ${title}`} />
+      )}
     </div>
   );
 }

@@ -1,105 +1,131 @@
-import { MenuType } from "@/models/menu/MenuType";
-import { CustomerOrderPageProps } from "./interface";
+import { useMemo, useState } from "react";
+import { useMutation, useQueryClient } from "@tanstack/react-query";
+
 import { CategoryType } from "@/models/category/CategoryType";
-import { useMemo } from "react";
+import { createOrder } from "@/libs/actions/order-actions";
+import { useAlertMessage } from "@/hooks/useAlertMessage";
+import { MenuType } from "@/models/menu/MenuType";
+
+import { CartItemType } from "../components/CartFloatSection/interface";
+import {
+  CustomerOrderPageProps,
+  WithCustomerOrderPageProps,
+} from "./interface";
+
+const MAX_ADDED_ITEM = 5;
 
 export function withCustomerOrderPage(
   Component: React.FC<CustomerOrderPageProps>,
 ) {
-  function WithCustomerOrderPage() {
-    const baseCategories: CategoryType[] = useMemo(
-      () => [
-        { id: 1, name: "Burgers" },
-        { id: 2, name: "Pizza" },
-        { id: 3, name: "Drinks" },
-        { id: 4, name: "Desserts" },
-      ],
-      [],
-    );
+  function WithCustomerOrderPage({
+    categories: baseCategories,
+    menus,
+    tableSession,
+    ...props
+  }: WithCustomerOrderPageProps) {
+    const [activeCategory, setActiveCategoryTab] = useState<number>(0); // Default to "All"
+    const [cartItems, setCartItems] = useState<CartItemType[]>([]);
+    const [isCartOpen, setIsCartOpen] = useState<boolean>(false);
+    const alertMessage = useAlertMessage();
+    const queryClient = useQueryClient();
 
-    // Demo data if not provided
     const categories: CategoryType[] = useMemo(() => {
       // Add "All" category at the beginning
       return [{ id: 0, name: "All" }, ...baseCategories];
     }, [baseCategories]);
 
-    const menus: MenuType[] = useMemo(() => {
-      return [
+    const { mutateAsync: handleCreateOrder } = useMutation({
+      mutationFn: (params: {
+        tableSessionToken: string;
+        items: CartItemType[];
+      }) => createOrder(params),
+      onSuccess: () => {},
+    });
+
+    async function handlePlaceOrder() {
+      if (cartItems.length === 0) {
+        alertMessage.warning({ message: "Your cart is empty" });
+        return;
+      }
+
+      await handleCreateOrder(
+        { tableSessionToken: tableSession.sessionToken, items: cartItems },
         {
-          id: 1,
-          name: "Classic Burger",
-          category: baseCategories[0],
-          price: 8.99,
-          isAvailable: true,
+          onSuccess: () => {
+            alertMessage.success({ message: "Order placed successfully!" });
+            setCartItems([]);
+            setIsCartOpen(false);
+            queryClient.invalidateQueries({
+              queryKey: ["order-histories", tableSession.sessionToken],
+            });
+          },
+          onError: () => {
+            alertMessage.error({ message: "Failed to place order" });
+          },
         },
-        {
-          id: 2,
-          name: "Cheese Burger",
-          category: baseCategories[0],
-          price: 9.99,
-          isAvailable: true,
-        },
-        {
-          id: 3,
-          name: "Bacon Burger",
-          category: baseCategories[0],
-          price: 10.99,
-          isAvailable: true,
-        },
-        {
-          id: 4,
-          name: "Margherita Pizza",
-          category: baseCategories[1],
-          price: 12.99,
-          isAvailable: true,
-        },
-        {
-          id: 5,
-          name: "Pepperoni Pizza",
-          category: baseCategories[1],
-          price: 13.99,
-          isAvailable: true,
-        },
-        {
-          id: 6,
-          name: "Vegetarian Pizza",
-          category: baseCategories[1],
-          price: 11.99,
-          isAvailable: false,
-        },
-        {
-          id: 7,
-          name: "Cola",
-          category: baseCategories[2],
-          price: 2.99,
-          isAvailable: true,
-        },
-        {
-          id: 8,
-          name: "Orange Juice",
-          category: baseCategories[2],
-          price: 3.99,
-          isAvailable: true,
-        },
-        {
-          id: 9,
-          name: "Chocolate Cake",
-          category: baseCategories[3],
-          price: 5.99,
-          isAvailable: true,
-        },
-        {
-          id: 10,
-          name: "Ice Cream",
-          category: baseCategories[3],
-          price: 4.99,
-          isAvailable: true,
-        },
-      ];
-    }, [baseCategories]);
+      );
+    }
+
+    function handleAddToCart(menu: MenuType, quantity: number) {
+      setCartItems((prevItems) => {
+        const existingItem = prevItems.find((item) => item.menu.id === menu.id);
+
+        // If item already in cart, just increase quantity
+        if (existingItem) {
+          return prevItems.map((item) =>
+            item.menu.id === menu.id
+              ? { ...item, quantity: item.quantity + quantity }
+              : item,
+          );
+        }
+
+        // If adding a new menu item, check if we're at 10 different menus limit
+        if (prevItems.length >= MAX_ADDED_ITEM) {
+          alertMessage.warning({
+            message: `Maximum ${MAX_ADDED_ITEM} different menus per order reached.`,
+          });
+          return prevItems;
+        }
+
+        return [...prevItems, { menu, quantity }];
+      });
+      if (cartItems.length < MAX_ADDED_ITEM) {
+        alertMessage.success({
+          message: `${quantity}x ${menu.name} added to cart`,
+        });
+      }
+    }
+
+    function handleRemoveItem(menuId: number) {
+      setCartItems((prevItems) =>
+        prevItems.filter((item) => item.menu.id !== menuId),
+      );
+      alertMessage.info({ message: "Item removed from cart" });
+    }
+
+    // Filter menus by active category (show all if "All" category selected)
+    const filteredMenus = useMemo(() => {
+      if (activeCategory === 0) {
+        return menus;
+      }
+      return menus?.filter((menu) => menu.category.id === activeCategory);
+    }, [menus, activeCategory]);
+
     const componentProps: CustomerOrderPageProps = {
+      ...props,
+      tableSession,
       categories,
       menus,
+      activeCategory,
+      filteredMenus,
+      cartItems,
+      isCartOpen,
+      isOrderLoading: false,
+      handleChangeActiveCategory: setActiveCategoryTab,
+      handleIsCardOpen: setIsCartOpen,
+      handlePlaceOrder,
+      handleAddToCart,
+      handleRemoveItem,
     };
     return <Component {...componentProps} />;
   }

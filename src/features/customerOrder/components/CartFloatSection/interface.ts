@@ -1,4 +1,4 @@
-import { CartItemType } from "@/models/cart/CartItemType";
+import { MenuType } from "@/models/menu/MenuType";
 
 export interface CartFloatSectionProps {
   cartItems: CartItemType[];
@@ -8,4 +8,9 @@ export interface CartFloatSectionProps {
   onRemoveItem: (menuId: number) => void;
   onOrder: () => void;
   isLoading?: boolean;
+}
+
+export interface CartItemType {
+  menu: MenuType;
+  quantity: number;
 }

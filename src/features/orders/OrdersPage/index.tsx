@@ -1,74 +1,47 @@
+"use client";
+
 import Link from "next/link";
 import { Button } from "antd";
+import axios from "axios";
+import { useQuery } from "@tanstack/react-query";
 
 import { OrderStatusEnum, orderStatusLabel } from "@/enums/OrderStatusEnum";
-import { TableSessionStatusEnum } from "@/enums/TableSessionStatusEnum";
-import { MenuType } from "@/models/menu/MenuType";
 import { OrderType } from "@/models/order/OrderType";
-import { TableSessionType } from "@/models/table/TableSessionType";
-import { OrderItemType } from "@/models/order/OrderItemType";
+import { PaginationType } from "@/interfaces/PaginationType";
+import { OrderResponseType } from "@/models/order/OrderResponseType";
+
 import OrderColumn from "../components/OrderColumn";
 
+const INTERVAL_POLLING = 5 * 1000; // 5 seconds
+
+async function getOrders(
+  params?: PaginationType & {
+    status?: OrderStatusEnum;
+    startAt: string; // ISO Date string
+    endAt?: string; // ISO Date string
+  },
+): Promise<OrderResponseType> {
+  const response = await axios.get<OrderType[]>("/api/management/orders", {
+    params,
+  });
+  return { data: response.data };
+}
+
 function OrdersPage() {
-  const mockMenus: MenuType[] = [
-    { id: 1, name: "Fired rice", price: 20, category: { id: 1, name: "rice" } },
-    { id: 2, name: "Water", price: 10, category: { id: 2, name: "drink" } },
-    { id: 3, name: "Soda", price: 15, category: { id: 2, name: "drink" } },
-  ];
-
-  const mockTableSession: TableSessionType = {
-    id: 1,
-    sessionToken: "session-token",
-    status: TableSessionStatusEnum.ACTIVE,
-    table: {
-      id: 1,
-      name: "Table No.1",
-    },
-  };
-  const mockOrderItems: OrderItemType[] = [
-    {
-      id: 1,
-      menu: mockMenus[0],
-      quantity: 2,
-      priceAtOrderTime: mockMenus[0].price,
-    },
-    {
-      id: 2,
-      menu: mockMenus[1],
-      quantity: 1,
-      priceAtOrderTime: mockMenus[1].price,
-    },
-    {
-      id: 3,
-      menu: mockMenus[2],
-      quantity: 1,
-      priceAtOrderTime: mockMenus[2].price,
-    },
-  ];
-  const mockOrders: OrderType[] = Array.from({ length: 7 }).map((_, i) => ({
-    id: i + 1,
-    tableSession: mockTableSession,
-    orderItems: mockOrderItems,
-    status:
-      i < 2
-        ? OrderStatusEnum.PENDING
-        : i < 4
-          ? OrderStatusEnum.IN_PROGRESS
-          : i < 6
-            ? OrderStatusEnum.COMPLETED
-            : OrderStatusEnum.CANCELLED,
-    totalPrice: mockOrderItems.reduce(
-      (acc, v) => acc + v.menu.price * v.quantity,
-      0,
-    ),
-  }));
-
   function filterOrderByStatus(
     status: OrderStatusEnum,
     orders: OrderType[],
   ): OrderType[] {
     return orders.filter((v) => v.status === status);
   }
+
+  const { data } = useQuery({
+    queryKey: ["orders"],
+    queryFn: () => getOrders(),
+    refetchInterval: INTERVAL_POLLING,
+  });
+
+  const orders = data?.data || [];
 
   return (
     <section className="h-full">
@@ -84,33 +57,33 @@ function OrdersPage() {
         <OrderColumn
           className="bg-amber-200"
           title={orderStatusLabel[OrderStatusEnum.PENDING]}
-          orders={filterOrderByStatus(OrderStatusEnum.PENDING, mockOrders)}
+          orders={filterOrderByStatus(OrderStatusEnum.PENDING, orders)}
           totalOrder={
-            filterOrderByStatus(OrderStatusEnum.PENDING, mockOrders).length
+            filterOrderByStatus(OrderStatusEnum.PENDING, orders).length
           }
         />
         <OrderColumn
           className="bg-blue-200"
           title={orderStatusLabel[OrderStatusEnum.IN_PROGRESS]}
-          orders={filterOrderByStatus(OrderStatusEnum.IN_PROGRESS, mockOrders)}
+          orders={filterOrderByStatus(OrderStatusEnum.IN_PROGRESS, orders)}
           totalOrder={
-            filterOrderByStatus(OrderStatusEnum.IN_PROGRESS, mockOrders).length
+            filterOrderByStatus(OrderStatusEnum.IN_PROGRESS, orders).length
           }
         />
         <OrderColumn
           className="bg-green-200"
           title={orderStatusLabel[OrderStatusEnum.COMPLETED]}
-          orders={filterOrderByStatus(OrderStatusEnum.COMPLETED, mockOrders)}
+          orders={filterOrderByStatus(OrderStatusEnum.COMPLETED, orders)}
           totalOrder={
-            filterOrderByStatus(OrderStatusEnum.COMPLETED, mockOrders).length
+            filterOrderByStatus(OrderStatusEnum.COMPLETED, orders).length
           }
         />
         <OrderColumn
           className="bg-red-200"
           title={orderStatusLabel[OrderStatusEnum.CANCELLED]}
-          orders={filterOrderByStatus(OrderStatusEnum.CANCELLED, mockOrders)}
+          orders={filterOrderByStatus(OrderStatusEnum.CANCELLED, orders)}
           totalOrder={
-            filterOrderByStatus(OrderStatusEnum.CANCELLED, mockOrders).length
+            filterOrderByStatus(OrderStatusEnum.CANCELLED, orders).length
           }
         />
       </div>

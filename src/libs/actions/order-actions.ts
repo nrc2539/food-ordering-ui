@@ -2,7 +2,7 @@
 
 import api from "@/libs/axios";
 import { OrderType } from "@/models/order/OrderType";
-import { CartItemType } from "@/models/cart/CartItemType";
+import { CartItemType } from "@/features/customerOrder/components/CartFloatSection/interface";
 import { OrderStatusEnum } from "@/enums/OrderStatusEnum";
 
 async function createOrder(params: {
@@ -11,7 +11,10 @@ async function createOrder(params: {
 }): Promise<OrderType> {
   const createData = {
     tableSessionToken: params.tableSessionToken,
-    items: params.items,
+    items: params.items.map((v) => ({
+      menuItemId: v.menu.id,
+      quantity: v.quantity,
+    })),
   };
 
   const response = await api.post<OrderType>("/orders", createData);

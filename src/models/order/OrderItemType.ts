@@ -2,7 +2,7 @@ import { MenuType } from "../menu/MenuType";
 
 export interface OrderItemType {
   id: number;
-  menu: MenuType;
+  menuItem: MenuType;
   quantity: number;
   priceAtOrderTime: number;
 }

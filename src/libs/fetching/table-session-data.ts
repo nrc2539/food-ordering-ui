@@ -19,4 +19,13 @@ async function getTableSession(id: number): Promise<TableSessionType> {
   return response.data;
 }
 
-export { getTableSessions, getTableSession };
+async function getTableSessionBySessionToken(
+  sessionToken: string,
+): Promise<TableSessionType> {
+  const response = await api.get(
+    `/table-sessions/session-tokens/${sessionToken}`,
+  );
+  return response.data;
+}
+
+export { getTableSessions, getTableSession, getTableSessionBySessionToken };

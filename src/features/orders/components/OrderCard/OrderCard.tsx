@@ -16,7 +16,7 @@ function OrderCard({
         <p>Table: {order.tableSession.table.name}</p>
         {order.orderItems.map((orderItem) => (
           <p key={orderItem.id}>
-            {orderItem.quantity}x {orderItem.menu.name}
+            {orderItem.quantity}x {orderItem.menuItem.name}
           </p>
         ))}
       </div>

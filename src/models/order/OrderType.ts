@@ -8,4 +8,5 @@ export interface OrderType {
   orderItems: OrderItemType[];
   totalPrice: number;
   status: OrderStatusEnum;
+  createdAt: string; // ISO datetime strimg
 }
