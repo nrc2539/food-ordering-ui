@@ -4,7 +4,7 @@ export interface WithOrderHistorySectionProps {
   sessionToken: string;
 }
 export interface OrderHistorySectionProps extends WithOrderHistorySectionProps {
-  orderHistory: OrderType[];
+  orderHistories: OrderType[];
   isLoading: boolean;
   isHistoryOpen: boolean;
   handleIsHistoryOpen: (isOpen: boolean) => void;

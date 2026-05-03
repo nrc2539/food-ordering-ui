@@ -6,7 +6,7 @@ import { OrderHistorySectionProps } from "./interface";
 
 function OrderHistorySection({
   isHistoryOpen,
-  orderHistory,
+  orderHistories,
   handleIsHistoryOpen,
 }: OrderHistorySectionProps) {
   return (
@@ -17,13 +17,13 @@ function OrderHistorySection({
         className="text-orange-500 hover:text-orange-600 font-semibold flex items-center gap-2 hover:bg-orange-50 transition-colors"
       >
         <IconHistory className="size-5" />
-        <span>History ({orderHistory.length})</span>
+        <span>History ({orderHistories.length})</span>
       </Button>
       {/* Order History Section */}
       <OrderHistoryDrawer
         isOpen={isHistoryOpen}
         onClose={() => handleIsHistoryOpen(false)}
-        orders={orderHistory}
+        orders={orderHistories}
       />
     </>
   );

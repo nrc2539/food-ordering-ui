@@ -39,7 +39,6 @@ export function withCustomerOrderPage(
         tableSessionToken: string;
         items: CartItemType[];
       }) => createOrder(params),
-      onSuccess: () => {},
     });
 
     async function handlePlaceOrder() {

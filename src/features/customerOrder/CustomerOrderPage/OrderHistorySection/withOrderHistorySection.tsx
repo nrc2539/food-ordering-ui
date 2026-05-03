@@ -1,5 +1,5 @@
 import axios from "axios";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useQuery } from "@tanstack/react-query";
 
 import { API_URL } from "@/libs/constant";
@@ -29,15 +29,21 @@ export function withOrderHistorySection(
   }: WithOrderHistorySectionProps) {
     const [isHistoryOpen, setIsHistoryOpen] = useState<boolean>(false);
 
-    const { data, isLoading } = useQuery({
+    const { data, isLoading, refetch } = useQuery({
       queryKey: ["order-histories", sessionToken],
       queryFn: () => getOrderByTableSession(sessionToken),
     });
 
+    useEffect(() => {
+      if (isHistoryOpen) {
+        refetch();
+      }
+    }, [isHistoryOpen, refetch]);
+
     const componentProps: OrderHistorySectionProps = {
       ...props,
       sessionToken,
-      orderHistory: data?.data || [],
+      orderHistories: data?.data || [],
       isLoading,
       isHistoryOpen,
       handleIsHistoryOpen: setIsHistoryOpen,
