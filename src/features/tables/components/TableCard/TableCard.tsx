@@ -6,6 +6,8 @@ import {
   IconTrashXFilled,
 } from "@tabler/icons-react";
 import { Button, Card, QRCode, Tag } from "antd";
+import Link from "next/link";
+import Text from "antd/es/typography/Text";
 
 import { cn } from "@/libs/utils";
 import { BASE_URL } from "@/libs/constant";
@@ -26,14 +28,14 @@ function TableCard({
   handleUpdateTable,
   handleDeleteTable,
   handleGenerateQR,
+  handleUpdateTableSession,
 }: TableCardProps) {
   const alertNotification = useAlertNotification();
   const { user } = useAuthentication();
   const isAdmin = user?.role.name === "admin";
 
-  const activeSession = data.sessions?.find(
-    (v) => v.status === TableSessionStatusEnum.ACTIVE,
-  );
+  const activeSession = data.activeSession;
+
   return (
     <Card
       title={data.name}
@@ -44,7 +46,7 @@ function TableCard({
       }
       styles={{ body: { padding: 0 } }}
     >
-      <div className="p-4 h-50 flex flex-col space-y-2 items-center justify-center">
+      <div className="p-4 h-64 flex flex-col space-y-2 items-center justify-center">
         <Button
           htmlType="button"
           type="primary"
@@ -64,11 +66,39 @@ function TableCard({
           <span>Generate QR code</span>
         </Button>
         {!!activeSession && (
-          <QRCode
-            size={160}
-            className={cn({ hidden: !activeSession })}
-            value={`${BASE_URL}/customer-order?sesstion-token=${activeSession.sessionToken}`}
-          />
+          <>
+            <QRCode
+              size={150}
+              className={cn({ hidden: !activeSession })}
+              value={`${BASE_URL}/customer-order?session-token=${activeSession.sessionToken}`}
+            />
+            <Link
+              href={`${BASE_URL}/customer-order?session-token=${activeSession.sessionToken}`}
+              target="_blank"
+              className="space-x-1"
+            >
+              <span>Session Link</span>
+              <Text
+                copyable={{
+                  text: `${BASE_URL}/customer-order?session-token=${activeSession.sessionToken}`,
+                }}
+              />
+            </Link>
+            <Button
+              className="text-red-500 hover:border-red-500"
+              onClick={() => {
+                handleModalStateChange({
+                  type: "update-table-session",
+                  value: {
+                    id: activeSession.id,
+                    name: data.name,
+                  },
+                });
+              }}
+            >
+              Close table session
+            </Button>
+          </>
         )}
       </div>
       {isAdmin && (
@@ -123,23 +153,59 @@ function TableCard({
         />
       )}
       <ConfirmModal
-        open={modalState.type === "delete"}
+        open={
+          modalState.type === "delete" ||
+          modalState.type === "update-table-session"
+        }
+        okText={
+          modalState.type === "update-table-session"
+            ? "Close session"
+            : "Delete"
+        }
         onConfirm={async () => {
           if (!modalState.value?.id) return;
-          await handleDeleteTable(modalState.value.id, {
-            onSuccess: () => {
-              alertNotification.info({ message: "Delete table successfully." });
-              handleCloseModal();
-            },
-            onError: () => {
-              alertNotification.error({ message: "Cannot delete table." });
-            },
-          });
+
+          if (modalState.type === "delete") {
+            await handleDeleteTable(modalState.value.id, {
+              onSuccess: () => {
+                alertNotification.info({
+                  message: "Delete table successfully.",
+                });
+                handleCloseModal();
+              },
+              onError: () => {
+                alertNotification.error({ message: "Cannot delete table." });
+              },
+            });
+          } else if (modalState.type === "update-table-session") {
+            await handleUpdateTableSession(
+              {
+                id: modalState.value.id,
+                status: TableSessionStatusEnum.CLOSED,
+              },
+              {
+                onSuccess: () => {
+                  alertNotification.info({
+                    message: "Update table session successfully.",
+                  });
+                  handleCloseModal();
+                },
+                onError: () => {
+                  alertNotification.error({
+                    message: "Update table session failed.",
+                  });
+                },
+              },
+            );
+          }
         }}
         onCancel={handleCloseModal}
       >
         <p>
-          Do you want to delete table{" "}
+          {modalState.type === "update-table-session"
+            ? "Do you want to close session"
+            : "Do you want to delete table"}
+          &nbsp;
           <span className="text-blue-500">{data.name}</span>
         </p>
       </ConfirmModal>

@@ -32,9 +32,18 @@ export interface TableCardProps extends WithTableCardProps {
     },
     unknown
   >;
+  handleUpdateTableSession: UseMutateAsyncFunction<
+    void,
+    Error,
+    {
+      id: number;
+      status: TableSessionStatusEnum;
+    },
+    unknown
+  >;
 }
 
 export type TableCardModalStateType = {
-  type?: "edit" | "delete";
-  value?: TableFormType;
+  type?: "edit" | "delete" | "update-table-session";
+  value?: { id?: number; name: string };
 };

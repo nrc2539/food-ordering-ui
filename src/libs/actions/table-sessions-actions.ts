@@ -23,6 +23,7 @@ async function updateTableSession(params: {
     status: params.status,
   };
   await api.patch(`/table-sessions/${params.id}`, updateData);
+  revalidatePath("/management/tables");
 }
 
 async function getTableSessionByToken(

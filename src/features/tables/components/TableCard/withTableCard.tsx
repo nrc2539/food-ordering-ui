@@ -4,7 +4,10 @@ import { useMutation } from "@tanstack/react-query";
 import { TableFormType } from "@/models/table/TableFormType";
 import { deleteTable, updateTable } from "@/libs/actions/table-actions";
 import { TableSessionStatusEnum } from "@/enums/TableSessionStatusEnum";
-import { createTableSession } from "@/libs/actions/table-sessions-actions";
+import {
+  createTableSession,
+  updateTableSession,
+} from "@/libs/actions/table-sessions-actions";
 
 import {
   TableCardModalStateType,
@@ -34,6 +37,11 @@ export function withTableCard(Component: React.FC<TableCardProps>) {
         }) => createTableSession(params),
       });
 
+    const { mutateAsync: handleUpdateTableSession } = useMutation({
+      mutationFn: (params: { id: number; status: TableSessionStatusEnum }) =>
+        updateTableSession(params),
+    });
+
     function handleCloseModal() {
       setModalState({ type: undefined, value: undefined });
     }
@@ -47,6 +55,7 @@ export function withTableCard(Component: React.FC<TableCardProps>) {
       handleUpdateTable,
       handleDeleteTable,
       handleGenerateQR,
+      handleUpdateTableSession,
     };
     return <Component {...componentProps} />;
   }
