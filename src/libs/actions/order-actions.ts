@@ -4,6 +4,7 @@ import api from "@/libs/axios";
 import { OrderType } from "@/models/order/OrderType";
 import { CartItemType } from "@/features/customerOrder/components/CartFloatSection/interface";
 import { OrderStatusEnum } from "@/enums/OrderStatusEnum";
+import { revalidatePath } from "next/cache";
 
 async function createOrder(params: {
   tableSessionToken: string;
@@ -40,6 +41,7 @@ async function updateOrder({
 
 async function deleteOrder(id: number): Promise<void> {
   await api.delete(`/orders/${id}`);
+  revalidatePath("/management/orders/histories");
 }
 
 export { createOrder, updateOrder, deleteOrder };

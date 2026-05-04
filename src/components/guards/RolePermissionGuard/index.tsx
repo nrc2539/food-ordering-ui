@@ -20,6 +20,11 @@ export const permissions = {
   staff: [FeatureEnum.ORDERS, FeatureEnum.TABLES],
 };
 
+const excludePaths = {
+  admin: [],
+  staff: ["/management/orders/histories"],
+};
+
 function RolePermissionGuard({ children }: RolePermissionGuardProps) {
   const { user } = useAuthentication();
   const router = useRouter();
@@ -29,6 +34,7 @@ function RolePermissionGuard({ children }: RolePermissionGuardProps) {
   function hasPermission(role: RoleType) {
     const roleKey = role.name as "admin" | "staff";
     const userPermissions = permissions[roleKey];
+    const userExcludePaths = excludePaths[roleKey];
 
     // Extract feature from pathname (e.g., /management/orders/* -> orders)
     const pathSegments = pathname.split("/").filter(Boolean);
@@ -42,7 +48,10 @@ function RolePermissionGuard({ children }: RolePermissionGuardProps) {
     const featureFromPath = pathSegments[managementIndex + 1];
 
     // Check if the feature from pathname is in user's permissions
-    return userPermissions.some((feature) => feature === featureFromPath);
+    return (
+      userPermissions.some((feature) => feature === featureFromPath) &&
+      !userExcludePaths.some((path) => path === pathname)
+    );
   }
 
   useEffect(() => {

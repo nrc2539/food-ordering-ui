@@ -1,7 +1,9 @@
 import { NextRequest, NextResponse } from "next/server";
 
 import api from "@/libs/axios";
-import { OrderType } from "@/models/order/OrderType";
+
+import { DEFAULT_PAGE, DEFAULT_PERPAGE } from "@/libs/constant";
+import { OrderResponseType } from "@/models/order/OrderResponseType";
 
 /* 
   Using Route handler as proxy API call for /orders 
@@ -11,13 +13,17 @@ import { OrderType } from "@/models/order/OrderType";
 */
 export async function GET(request: NextRequest) {
   const searchParams = request.nextUrl.searchParams;
+  const page = searchParams.get("page") ?? DEFAULT_PAGE;
+  const limitPerPage = searchParams.get("limitPerPage") ?? DEFAULT_PERPAGE;
+  const all = searchParams.get("all") ?? false;
   const status = searchParams.get("status") ?? undefined;
   const startAt = searchParams.get("startAt") ?? undefined;
   const endAt = searchParams.get("endAt") ?? undefined;
+  const params = { page, limitPerPage, all, status, startAt, endAt };
+
   try {
-    const res = await api.get<OrderType[]>("/orders", {
-      params: { status, startAt, endAt },
-    });
+    const res = await api.get<OrderResponseType>("/orders", { params });
+
     return NextResponse.json(res.data);
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
   } catch (error: any) {

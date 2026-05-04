@@ -11,23 +11,29 @@ import { PaginationType } from "@/interfaces/PaginationType";
 import { OrderResponseType } from "@/models/order/OrderResponseType";
 
 import OrderColumn from "../components/OrderColumn";
+import { DateTime } from "luxon";
+import { useAuthentication } from "@/providers/AuthenticationProvider";
 
 const INTERVAL_POLLING = 5 * 1000; // 5 seconds
 
 async function getOrders(
   params?: PaginationType & {
     status?: OrderStatusEnum;
-    startAt: string; // ISO Date string
+    startAt?: string; // ISO Date string
     endAt?: string; // ISO Date string
   },
 ): Promise<OrderResponseType> {
-  const response = await axios.get<OrderType[]>("/api/management/orders", {
-    params,
-  });
-  return { data: response.data };
+  const response = await axios.get<OrderResponseType>(
+    "/api/management/orders",
+    { params },
+  );
+
+  return response.data;
 }
 
 function OrdersPage() {
+  const { user } = useAuthentication();
+  const isAdmin = user?.role.name === "admin";
   function filterOrderByStatus(
     status: OrderStatusEnum,
     orders: OrderType[],
@@ -37,7 +43,14 @@ function OrdersPage() {
 
   const { data } = useQuery({
     queryKey: ["orders"],
-    queryFn: () => getOrders(),
+    queryFn: () =>
+      getOrders({
+        all: true,
+        startAt:
+          DateTime.fromJSDate(new Date()).startOf("day").toISO() ?? undefined,
+        endAt:
+          DateTime.fromJSDate(new Date()).endOf("day").toISO() ?? undefined,
+      }),
     refetchInterval: INTERVAL_POLLING,
   });
 
@@ -47,11 +60,13 @@ function OrdersPage() {
     <section className="h-full">
       <div className="mb-5 flex items-start justify-between">
         <h1 className="text-3xl font-medium">Orders Management</h1>
-        <Link href={"/management/orders/histories"}>
-          <Button type="link" className="underline">
-            See histories order
-          </Button>
-        </Link>
+        {isAdmin && (
+          <Link href={"/management/orders/histories"}>
+            <Button type="link" className="underline">
+              See histories order
+            </Button>
+          </Link>
+        )}
       </div>
       <div className="h-full max-h-[calc(100%-20px-36px)] grid grid-cols-4 gap-4">
         <OrderColumn
