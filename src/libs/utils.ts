@@ -47,3 +47,8 @@ export function formatNumber(
 
   return formattedValue;
 }
+
+export function isNaNValue(value: unknown): boolean {
+  const num = Number(value);
+  return isNaN(num);
+}

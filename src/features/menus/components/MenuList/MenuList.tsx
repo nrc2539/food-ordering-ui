@@ -16,10 +16,14 @@ function MenuList({
   categories,
   modalState,
   isUpdatingMenu,
+  currentPage,
+  totalItems,
+  pageSize,
   handleModalStateChange,
   handleCloseModal,
   handleUpdateMenu,
   handleDeleteMenu,
+  handleChangePage,
 }: MenuListProps) {
   const alertNotification = useAlertNotification();
   const columns: TableProps<MenuType>["columns"] = [
@@ -130,6 +134,12 @@ function MenuList({
         rowKey={(record) => record.id}
         columns={columns}
         dataSource={menus}
+        pagination={{
+          pageSize,
+          total: totalItems,
+          current: currentPage,
+          onChange: handleChangePage,
+        }}
       />
 
       {modalState.type === "edit" && !!modalState.value && (

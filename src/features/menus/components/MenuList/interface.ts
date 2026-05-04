@@ -8,6 +8,9 @@ export interface WithMenuListProps {
   className?: string;
   menus: MenuType[];
   categories: CategoryType[];
+  currentPage: number;
+  pageSize: number;
+  totalItems: number;
 }
 
 export interface MenuListProps extends WithMenuListProps {
@@ -22,6 +25,7 @@ export interface MenuListProps extends WithMenuListProps {
     unknown
   >;
   handleDeleteMenu: UseMutateAsyncFunction<void, Error, number, unknown>;
+  handleChangePage: (page: number) => void;
 }
 
 export type MenuListModalStateType = {

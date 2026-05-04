@@ -1,5 +1,11 @@
 import MenusPage from "@/features/menus/MenusPage";
+import { PaginationType } from "@/interfaces/PaginationType";
 
-export default function Menus() {
-  return <MenusPage />;
+export default async function Menus({
+  searchParams,
+}: {
+  searchParams: Promise<PaginationType>;
+}) {
+  const pageSearchParams = await searchParams;
+  return <MenusPage searchParams={pageSearchParams} />;
 }
