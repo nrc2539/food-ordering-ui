@@ -16,10 +16,14 @@ function UserList({
   users,
   roles,
   modalState,
+  currentPage,
+  pageSize,
+  totalItems,
   handleModalStateChange,
   handleCloseModal,
   handleUpdateUser,
   handleDeleteUser,
+  handleChangePage,
 }: UserListProps) {
   const { user, refetchProfile } = useAuthentication();
   const alertNotification = useAlertNotification();
@@ -97,6 +101,12 @@ function UserList({
         rowKey={(record) => record.id}
         columns={columns}
         dataSource={users}
+        pagination={{
+          pageSize,
+          current: currentPage,
+          total: totalItems,
+          onChange: handleChangePage,
+        }}
       />
 
       {modalState.type === "edit" && !!modalState.value && (

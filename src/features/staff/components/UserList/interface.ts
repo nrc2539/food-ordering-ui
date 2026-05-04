@@ -8,6 +8,9 @@ export interface WithUserListProps {
   className?: string;
   users: UserType[];
   roles: RoleType[];
+  currentPage: number;
+  pageSize: number;
+  totalItems: number;
 }
 
 export interface UserListProps extends WithUserListProps {
@@ -21,6 +24,7 @@ export interface UserListProps extends WithUserListProps {
     unknown
   >;
   handleDeleteUser: UseMutateAsyncFunction<void, Error, number, unknown>;
+  handleChangePage: (page: number) => void;
 }
 
 export type UserListModalStateType = {

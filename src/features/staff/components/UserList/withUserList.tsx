@@ -1,5 +1,6 @@
 import { useState } from "react";
 import { useMutation } from "@tanstack/react-query";
+import { usePathname, useRouter, useSearchParams } from "next/navigation";
 
 import { UserFormType } from "@/models/user/UserFormType";
 import { deleteUser, updateUser } from "@/libs/actions/user-actions";
@@ -12,6 +13,9 @@ import {
 
 export function withUserList(Component: React.FC<UserListProps>) {
   function WithUserList(props: WithUserListProps) {
+    const router = useRouter();
+    const pathname = usePathname();
+    const searchParams = useSearchParams();
     const [modalState, setModalState] = useState<UserListModalStateType>({
       type: undefined,
       value: undefined,
@@ -26,6 +30,12 @@ export function withUserList(Component: React.FC<UserListProps>) {
       mutationFn: (id: number) => deleteUser(id),
     });
 
+    function handleChangePage(page: number) {
+      const params = new URLSearchParams(searchParams.toString());
+      params.set("page", page.toString());
+      router.push(`${pathname}?${params.toString()}`);
+    }
+
     function handleCloseModal() {
       setModalState({ type: undefined, value: undefined });
     }
@@ -37,6 +47,7 @@ export function withUserList(Component: React.FC<UserListProps>) {
       handleCloseModal,
       handleUpdateUser,
       handleDeleteUser,
+      handleChangePage,
     };
     return <Component {...componentProps} />;
   }

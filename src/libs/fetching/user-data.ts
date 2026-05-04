@@ -9,10 +9,10 @@ async function getUsers(
     roleIds?: number[];
   },
 ): Promise<UserResponseType> {
-  const res = await api.get<UserType[]>("/users", {
+  const res = await api.get<UserResponseType>("/users", {
     params,
   });
-  return { data: res.data };
+  return res.data;
 }
 
 async function getUser(id: number): Promise<UserType> {
