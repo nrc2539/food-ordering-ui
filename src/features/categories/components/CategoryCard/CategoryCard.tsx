@@ -25,7 +25,7 @@ function CategoryCard({
         <div className="text-sm font-medium">
           <p className="text-gray-400">Menu items</p>
           <div className=" text-gray-600">
-            {formatNumber(data.menus?.length || 0)}
+            {formatNumber(data.menuItems?.length || 0)}
           </div>
         </div>
         <div className="flex items-center justify-end">
