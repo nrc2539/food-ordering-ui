@@ -13,7 +13,9 @@ function NavBar({ className }: NavBarProps) {
           <div className="text-base font-medium text-gray-700">
             {user?.name}
           </div>
-          <p className="text-xs font-normal text-gray-500">{user?.role.name}</p>
+          <p className="text-xs font-normal text-gray-500 capitalize">
+            {user?.role.name}
+          </p>
         </div>
       </div>
     </nav>
