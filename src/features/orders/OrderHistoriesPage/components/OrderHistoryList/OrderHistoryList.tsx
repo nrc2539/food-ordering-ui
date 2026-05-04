@@ -95,7 +95,7 @@ function OrderHistoryList({
       ellipsis: true,
       render: (_, record) => (
         <p className="text-[11px]">
-          {formatDate(record.createdAt, "dd/MM/yyyy hh:mm")}
+          {formatDate(record.createdAt, "dd/MM/yyyy HH:mm")}
         </p>
       ),
     },

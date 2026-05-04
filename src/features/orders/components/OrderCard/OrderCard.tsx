@@ -1,5 +1,6 @@
 import { Button } from "antd";
 
+import { formatDate } from "@/libs/utils";
 import { OrderStatusEnum } from "@/enums/OrderStatusEnum";
 import { OrderCardProps } from "./interface";
 
@@ -13,6 +14,12 @@ function OrderCard({
     <div className="bg-white rounded-md p-3">
       <div className="mb-3 text-sm flex flex-col space-y-1">
         <p>Order ID : {order.id}</p>
+        <p>
+          Created at :&nbsp;
+          <span className="text-xs">
+            {formatDate(order.createdAt, "dd/MM/yyyy HH:mm")}
+          </span>
+        </p>
         <p>Table: {order.tableSession.table.name}</p>
         {order.orderItems.map((orderItem) => (
           <p key={orderItem.id}>
