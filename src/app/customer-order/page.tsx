@@ -19,7 +19,7 @@ export default async function CustomerOrder({
 
   const responseCategories = await getCategories();
   const categories = responseCategories.data;
-  const responseMenus = await getMenus();
+  const responseMenus = await getMenus({ all: true });
   const menus = responseMenus.data;
   const tableSession = await getTableSessionByToken(sessionToken);
 

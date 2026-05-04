@@ -3,7 +3,6 @@ import { useEffect, useState } from "react";
 import { useQuery } from "@tanstack/react-query";
 
 import { API_URL } from "@/libs/constant";
-import { OrderType } from "@/models/order/OrderType";
 import { OrderResponseType } from "@/models/order/OrderResponseType";
 
 import {
@@ -14,10 +13,10 @@ import {
 async function getOrderByTableSession(
   tableSessionToken: string,
 ): Promise<OrderResponseType> {
-  const res = await axios.get<OrderType[]>(
+  const res = await axios.get<OrderResponseType>(
     `${API_URL}/orders/table-session/${tableSessionToken}`,
   );
-  return { data: res.data };
+  return res.data;
 }
 
 export function withOrderHistorySection(

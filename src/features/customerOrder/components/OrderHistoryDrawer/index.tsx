@@ -59,7 +59,7 @@ export const OrderHistoryDrawer: React.FC<OrderHistoryDrawerProps> = ({
                       Order #{order.id}
                     </p>
                     <p className="text-sm text-gray-600">
-                      {formatDate(order.createdAt)}
+                      {formatDate(order.createdAt, "dd/MM/yyyy HH:mm")}
                     </p>
                   </div>
                   <Tag color={getStatusColor(order.status)}>
