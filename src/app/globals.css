@@ -20,13 +20,6 @@
   --font-sans: var(--font-mitr);
 }
 
-@media (prefers-color-scheme: light) {
-  :root {
-    --background: var(--dark-mode-background);
-    --color: var(--dark-mode-foreground);
-  }
-}
-
 html {
   font-family: var(--font-mitr), ui-sans-serif, system-ui;
 }
